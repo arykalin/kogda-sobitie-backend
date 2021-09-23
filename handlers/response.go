@@ -24,7 +24,13 @@ func AuthorizationResponse(msg string, writer http.ResponseWriter) {
 // SuccessArrRespond -> response formatter
 func SuccessArrRespond(fields []*models.Event, writer http.ResponseWriter) {
 	// var fields["status"] := "success"
+	if fields == nil {
+		fields = []*models.Event{}
+	}
 	_, err := json.Marshal(fields)
+	if err != nil {
+		ServerErrResponse(err.Error(), writer)
+	}
 	type data struct {
 		People     []*models.Event `json:"data"`
 		Statuscode int             `json:"status"`
