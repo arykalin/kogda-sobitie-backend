@@ -22,13 +22,13 @@ func AuthorizationResponse(msg string, writer http.ResponseWriter) {
 }
 
 // SuccessArrRespond -> response formatter
-func SuccessArrRespond(fields []*models.Person, writer http.ResponseWriter) {
+func SuccessArrRespond(fields []*models.Event, writer http.ResponseWriter) {
 	// var fields["status"] := "success"
 	_, err := json.Marshal(fields)
 	type data struct {
-		People     []*models.Person `json:"data"`
-		Statuscode int              `json:"status"`
-		Message    string           `json:"msg"`
+		People     []*models.Event `json:"data"`
+		Statuscode int             `json:"status"`
+		Message    string          `json:"msg"`
 	}
 	temp := &data{People: fields, Statuscode: 200, Message: "success"}
 	if err != nil {
@@ -42,12 +42,12 @@ func SuccessArrRespond(fields []*models.Person, writer http.ResponseWriter) {
 }
 
 // SuccessRespond -> response formatter
-func SuccessRespond(fields models.Person, writer http.ResponseWriter) {
+func SuccessRespond(fields models.Event, writer http.ResponseWriter) {
 	_, err := json.Marshal(fields)
 	type data struct {
-		Person     models.Person `json:"data"`
-		Statuscode int           `json:"status"`
-		Message    string        `json:"msg"`
+		Person     models.Event `json:"data"`
+		Statuscode int          `json:"status"`
+		Message    string       `json:"msg"`
 	}
 	temp := &data{Person: fields, Statuscode: 200, Message: "success"}
 	if err != nil {

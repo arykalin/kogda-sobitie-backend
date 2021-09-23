@@ -32,7 +32,7 @@ var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Re
 
 // CreateEventEndpoint -> create event
 var CreateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-	var event models.Person
+	var event models.Event
 	err := json.NewDecoder(request.Body).Decode(&event)
 	if err != nil {
 		middlewares.ServerErrResponse(err.Error(), response)
@@ -54,7 +54,7 @@ var CreateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, re
 
 // GetEventsEndpoint -> get events
 var GetEventsEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-	var events []*models.Person
+	var events []*models.Event
 
 	collection := client.Database("golang").Collection("events")
 	cursor, err := collection.Find(context.TODO(), bson.D{{}})
@@ -63,7 +63,7 @@ var GetEventsEndpoint = http.HandlerFunc(func(response http.ResponseWriter, requ
 		return
 	}
 	for cursor.Next(context.TODO()) {
-		var event models.Person
+		var event models.Event
 		err := cursor.Decode(&event)
 		if err != nil {
 			log.Fatal(err)
@@ -82,12 +82,12 @@ var GetEventsEndpoint = http.HandlerFunc(func(response http.ResponseWriter, requ
 var GetEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	var event models.Person
+	var event models.Event
 
 	collection := client.Database("golang").Collection("events")
 	err := collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&event)
 	if err != nil {
-		middlewares.ErrorResponse("Person does not exist", response)
+		middlewares.ErrorResponse("Event does not exist", response)
 		return
 	}
 	middlewares.SuccessRespond(event, response)
@@ -97,12 +97,12 @@ var GetEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, reque
 var DeleteEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	var event models.Person
+	var event models.Event
 
 	collection := client.Database("golang").Collection("events")
 	err := collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&event)
 	if err != nil {
-		middlewares.ErrorResponse("Person does not exist", response)
+		middlewares.ErrorResponse("Event does not exist", response)
 		return
 	}
 	_, derr := collection.DeleteOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}})
@@ -129,7 +129,7 @@ var UpdateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, re
 		return
 	}
 	if res.MatchedCount == 0 {
-		middlewares.ErrorResponse("Person does not exist", response)
+		middlewares.ErrorResponse("Event does not exist", response)
 		return
 	}
 	middlewares.SuccessResponse("Updated", response)
