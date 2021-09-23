@@ -15,7 +15,7 @@ import (
 
 func main() {
 
-	url := "http://localhost:8080/event"
+	url := "http://95.216.158.138:80/event"
 	method := "POST"
 
 	sLoggerConfig := zap.NewDevelopmentConfig()
@@ -60,38 +60,51 @@ func main() {
 		logger.Fatalf("failed to add events: %s", err)
 	}
 
-	payload := strings.NewReader(`{
-    "date":"24.09.2021",
-    "title":"Чтения на среднем",
-    "duration":"3-5 часов",
-    "link":"https://vk.com/4tenia",
-    "who_manages":"Татка",
-    "for_whom":"для всех",
-    "where":"Дом Средний",
-    "description":"четния по пятницам на среднем",
-    "wanting_people":"15"
-}`)
+	gotEvents := e.GetEvents()
 
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, payload)
+	for _, event := range gotEvents {
+		payload := strings.NewReader(fmt.Sprintf(`{
+    "date":"%s",
+    "title":"%s",
+    "duration":"%s",
+    "link":"%s",
+    "who_manages":"%s",
+    "for_whom":"%s",
+    "where":"%s",
+    "description":"%s",
+    "wanting_people":"%s"
+}`, event.Date,
+			event.Title,
+			event.Duration,
+			event.Link,
+			event.WhoManages,
+			event.ForWhom,
+			event.Where,
+			event.Description,
+			event.WantingPeople))
 
-	if err != nil {
-		fmt.Println(err)
-		return
+		client := &http.Client{}
+		req, err := http.NewRequest(method, url, payload)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		req.Header.Add("Content-Type", "application/json")
+
+		res, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(string(body))
 	}
-	req.Header.Add("Content-Type", "application/json")
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(string(body))
 }

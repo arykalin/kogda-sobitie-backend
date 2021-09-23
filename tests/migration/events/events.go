@@ -98,6 +98,9 @@ func (u *events) AddEvents(sheet *spreadsheet.Sheet, config *SheetConfig) (err e
 		if len(sheet.Rows[i]) > config.DescriptionIdx {
 			description = sheet.Rows[i][config.DescriptionIdx].Value
 		}
+		if description == "" {
+			description = "description"
+		}
 		event.Description = description
 
 		u.events = append(u.events, event)
