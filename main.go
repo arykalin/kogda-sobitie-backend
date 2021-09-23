@@ -17,7 +17,7 @@ func hello(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 	port := middlewares.DotEnvVariable("PORT")
-	color.Cyan("🌏 Server running on localhost:" + port)
+	color.Cyan("🌏 Serverr running on localhost:" + port)
 
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	router := routes.Routes()
