@@ -30,20 +30,20 @@ var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Re
 	middlewares.SuccessResponse(string(validToken), response)
 })
 
-// CreatePersonEndpoint -> create person
-var CreatePersonEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-	var person models.Person
-	err := json.NewDecoder(request.Body).Decode(&person)
+// CreateEventEndpoint -> create event
+var CreateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+	var event models.Person
+	err := json.NewDecoder(request.Body).Decode(&event)
 	if err != nil {
 		middlewares.ServerErrResponse(err.Error(), response)
 		return
 	}
-	if ok, errors := validators.ValidateInputs(person); !ok {
+	if ok, errors := validators.ValidateInputs(event); !ok {
 		middlewares.ValidationResponse(errors, response)
 		return
 	}
-	collection := client.Database("golang").Collection("people")
-	result, err := collection.InsertOne(context.TODO(), person)
+	collection := client.Database("golang").Collection("events")
+	result, err := collection.InsertOne(context.TODO(), event)
 	if err != nil {
 		middlewares.ServerErrResponse(err.Error(), response)
 		return
@@ -52,55 +52,55 @@ var CreatePersonEndpoint = http.HandlerFunc(func(response http.ResponseWriter, r
 	middlewares.SuccessResponse(`Inserted at `+strings.Replace(string(res), `"`, ``, 2), response)
 })
 
-// GetPeopleEndpoint -> get people
-var GetPeopleEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-	var people []*models.Person
+// GetEventsEndpoint -> get events
+var GetEventsEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+	var events []*models.Person
 
-	collection := client.Database("golang").Collection("people")
+	collection := client.Database("golang").Collection("events")
 	cursor, err := collection.Find(context.TODO(), bson.D{{}})
 	if err != nil {
 		middlewares.ServerErrResponse(err.Error(), response)
 		return
 	}
 	for cursor.Next(context.TODO()) {
-		var person models.Person
-		err := cursor.Decode(&person)
+		var event models.Person
+		err := cursor.Decode(&event)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		people = append(people, &person)
+		events = append(events, &event)
 	}
 	if err := cursor.Err(); err != nil {
 		middlewares.ServerErrResponse(err.Error(), response)
 		return
 	}
-	middlewares.SuccessArrRespond(people, response)
+	middlewares.SuccessArrRespond(events, response)
 })
 
-// GetPersonEndpoint -> get person by id
-var GetPersonEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+// GetEventEndpoint -> get event by id
+var GetEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	var person models.Person
+	var event models.Person
 
-	collection := client.Database("golang").Collection("people")
-	err := collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&person)
+	collection := client.Database("golang").Collection("events")
+	err := collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&event)
 	if err != nil {
 		middlewares.ErrorResponse("Person does not exist", response)
 		return
 	}
-	middlewares.SuccessRespond(person, response)
+	middlewares.SuccessRespond(event, response)
 })
 
-// DeletePersonEndpoint -> delete person by id
-var DeletePersonEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+// DeleteEventEndpoint -> delete event by id
+var DeleteEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	var person models.Person
+	var event models.Person
 
-	collection := client.Database("golang").Collection("people")
-	err := collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&person)
+	collection := client.Database("golang").Collection("events")
+	err := collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&event)
 	if err != nil {
 		middlewares.ErrorResponse("Person does not exist", response)
 		return
@@ -113,8 +113,8 @@ var DeletePersonEndpoint = http.HandlerFunc(func(response http.ResponseWriter, r
 	middlewares.SuccessResponse("Deleted", response)
 })
 
-// UpdatePersonEndpoint -> update person by id
-var UpdatePersonEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+// UpdateEventEndpoint -> update event by id
+var UpdateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
 	type fname struct {
@@ -122,7 +122,7 @@ var UpdatePersonEndpoint = http.HandlerFunc(func(response http.ResponseWriter, r
 	}
 	var fir fname
 	json.NewDecoder(request.Body).Decode(&fir)
-	collection := client.Database("golang").Collection("people")
+	collection := client.Database("golang").Collection("events")
 	res, err := collection.UpdateOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}, bson.D{primitive.E{Key: "$set", Value: bson.D{primitive.E{Key: "firstname", Value: fir.Firstname}}}})
 	if err != nil {
 		middlewares.ServerErrResponse(err.Error(), response)

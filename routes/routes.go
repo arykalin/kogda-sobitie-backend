@@ -11,12 +11,12 @@ import (
 // Routes -> define endpoints
 func Routes() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/person", controllers.CreatePersonEndpoint).Methods("POST")
+	router.HandleFunc("/event", controllers.CreateEventEndpoint).Methods("POST")
 	router.HandleFunc("/auth", controllers.Auths).Methods("GET")
-	router.HandleFunc("/people", middlewares.IsAuthorized(controllers.GetPeopleEndpoint)).Methods("GET")
-	router.HandleFunc("/person/{id}", controllers.GetPersonEndpoint).Methods("GET")
-	router.HandleFunc("/person/{id}", controllers.DeletePersonEndpoint).Methods("DELETE")
-	router.HandleFunc("/person/{id}", controllers.UpdatePersonEndpoint).Methods("PUT")
+	router.HandleFunc("/events", middlewares.IsAuthorized(controllers.GetEventsEndpoint)).Methods("GET")
+	router.HandleFunc("/event/{id}", controllers.GetEventEndpoint).Methods("GET")
+	router.HandleFunc("/event/{id}", controllers.DeleteEventEndpoint).Methods("DELETE")
+	router.HandleFunc("/event/{id}", controllers.UpdateEventEndpoint).Methods("PUT")
 	router.HandleFunc("/upload", controllers.UploadFileEndpoint).Methods("POST")
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./uploaded/"))))
 	return router

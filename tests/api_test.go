@@ -13,7 +13,7 @@ import (
 var rou = routes.Routes()
 
 func TestGetPeopleEndpoint(t *testing.T) {
-	req, err := http.NewRequest("GET", "/people", nil)
+	req, err := http.NewRequest("GET", "/events", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -32,7 +32,7 @@ func TestGetPeopleEndpoint(t *testing.T) {
 }
 
 func TestGetPersonEndpoint(t *testing.T) {
-	req, err := http.NewRequest("GET", "/person/5fa1530787b3a854d8abddf5", nil)
+	req, err := http.NewRequest("GET", "/event/5fa1530787b3a854d8abddf5", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -56,7 +56,7 @@ func TestCreatePersonEndpoint(t *testing.T) {
 		"lastname": "karis"
 	}`)
 
-	req, err := http.NewRequest("POST", "/person", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/event", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -79,7 +79,7 @@ func TestUpdatePersonEndpoint(t *testing.T) {
 	var jsonStr = []byte(`{
 		"firstname": "manoj"
 	}`)
-	req, err := http.NewRequest("PUT", "/person/5fa1530787b3a854d8abddf5", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("PUT", "/event/5fa1530787b3a854d8abddf5", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -99,7 +99,7 @@ func TestUpdatePersonEndpoint(t *testing.T) {
 }
 
 func TestDeletePersonEndpoint(t *testing.T) {
-	req, err := http.NewRequest("DELETE", "/person/5fa1530787b3a854d8abddf5", nil)
+	req, err := http.NewRequest("DELETE", "/event/5fa1530787b3a854d8abddf5", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
