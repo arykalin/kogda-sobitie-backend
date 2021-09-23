@@ -29,7 +29,7 @@ func ValidateInputs(dataSet interface{}) (bool, map[string][]string) {
 			field, _ := reflected.Type().FieldByName(err.StructField())
 			var name string
 
-			//If json tag doesn't exist, use lower case of name
+			// If json tag doesn't exist, use lower case of name
 			if name = field.Tag.Get("json"); name == "" {
 				name = strings.ToLower(err.StructField())
 			}
