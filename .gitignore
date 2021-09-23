@@ -21,3 +21,6 @@ uploaded/*
 
 # Dependency directories (remove the comment below to include it)
 vendor/
+
+client_secret.json
+/tests/client_secret.json

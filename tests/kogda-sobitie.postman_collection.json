@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "4030529f-d1eb-4318-b948-13fddc5f524d",
+		"name": "kogda-sobitie",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create event",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\":\"24.09.2021\",\n    \"title\":\"Сторителинг \\\"Тепло\\\" в Чердаке\",\n    \"duration\":\"3-5 часов\",\n    \"link\":\"https://vzhuh.timepad.ru/event/1778790/\",\n    \"who_manages\":\"Янка\",\n    \"for_whom\":\"взрослые\",\n    \"where\":\"\",\n    \"description\":\"что то такое\",\n    \"wanting_people\":\"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}:8080/event",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"event"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update event",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\":\"24.09.2021\",\n    \"title\":\"Чтения на среднем\",\n    \"duration\":\"3-6 часов\",\n    \"link\":\"https://vk.com/4tenia\",\n    \"who_manages\":\"Татка\",\n    \"for_whom\":\"для всех\",\n    \"where\":\"Дом Средний\",\n    \"description\":\"четния по пятницам на среднем\",\n    \"wanting_people\":\"15\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/event/{{event_id}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"event",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get events",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/events",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get event",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/event/{{event_id}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"event",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete event",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/event/{{event_id}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"event",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
