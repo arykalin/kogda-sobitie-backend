@@ -32,7 +32,7 @@ func SuccessArrRespond(fields []*models.Event, writer http.ResponseWriter) {
 		ServerErrResponse(err.Error(), writer)
 	}
 	type data struct {
-		People     []*models.Event `json:"data"`
+		People     []*models.Event `json:"events"`
 		Statuscode int             `json:"status"`
 		Message    string          `json:"msg"`
 	}
