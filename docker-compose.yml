@@ -21,6 +21,6 @@ services:
     image: 'mongo:latest'
     container_name: 'mongo'
     ports:
-      - '27100:27017'
+      - '27100:27100'
     volumes:
       - ./data/dev/mongo:/data/db
