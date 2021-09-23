@@ -12,10 +12,9 @@ var mySigningKey = []byte(DotEnvVariable("JWT_SECRET"))
 
 // IsAuthorized -> verify jwt header
 func IsAuthorized(next http.Handler) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
+	return func(w http.ResponseWriter, r *http.Request) {
+		next.ServeHTTP(w, r)
 		if r.Header["Token"] != nil {
-
 			token, err := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, fmt.Errorf("There was an error")
@@ -33,7 +32,7 @@ func IsAuthorized(next http.Handler) http.HandlerFunc {
 		} else {
 			AuthorizationResponse("Not Authorized", w)
 		}
-	})
+	}
 }
 
 // GenerateJWT -> generate jwt
