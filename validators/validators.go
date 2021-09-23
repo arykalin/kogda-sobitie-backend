@@ -15,18 +15,16 @@ func ValidateInputs(dataSet interface{}) (bool, map[string][]string) {
 	err := validate.Struct(dataSet)
 
 	if err != nil {
-
-		//Validation syntax is invalid
+		// Validation syntax is invalid
 		if err, ok := err.(*validator.InvalidValidationError); ok {
 			panic(err)
 		}
 
-		//Validation errors occurred
+		// Validation errors occurred
 		errors := make(map[string][]string)
-		//Use reflector to reverse engineer struct
+		// Use reflector to reverse engineer struct
 		reflected := reflect.ValueOf(dataSet)
 		for _, err := range err.(validator.ValidationErrors) {
-
 			// Attempt to find field by name and get json tag name
 			field, _ := reflected.Type().FieldByName(err.StructField())
 			var name string

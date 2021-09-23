@@ -9,11 +9,11 @@ import (
 	"os"
 	"strings"
 
+	"github.com/arykalin/kogda-sobitie-backend/db"
+	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
+	"github.com/arykalin/kogda-sobitie-backend/models"
+	"github.com/arykalin/kogda-sobitie-backend/validators"
 	"github.com/gorilla/mux"
-	"github.com/umangraval/Go-Mongodb-REST-boilerplate/db"
-	middlewares "github.com/umangraval/Go-Mongodb-REST-boilerplate/handlers"
-	"github.com/umangraval/Go-Mongodb-REST-boilerplate/models"
-	"github.com/umangraval/Go-Mongodb-REST-boilerplate/validators"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

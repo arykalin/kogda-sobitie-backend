@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/umangraval/Go-Mongodb-REST-boilerplate/models"
+	"github.com/arykalin/kogda-sobitie-backend/models"
 )
 
 // AuthorizationResponse -> response authorize

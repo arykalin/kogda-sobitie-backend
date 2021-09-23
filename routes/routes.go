@@ -3,9 +3,9 @@ package routes
 import (
 	"net/http"
 
+	"github.com/arykalin/kogda-sobitie-backend/controllers"
+	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
 	"github.com/gorilla/mux"
-	"github.com/umangraval/Go-Mongodb-REST-boilerplate/controllers"
-	middlewares "github.com/umangraval/Go-Mongodb-REST-boilerplate/handlers"
 )
 
 // Routes -> define endpoints
