@@ -22,6 +22,31 @@ var client = db.Dbconnect()
 
 // Auths -> get token
 var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+	//TODO: generate token only for valid google users
+	//https://qvault.io/golang/how-to-implement-sign-in-with-google-in-golang/
+	// parse the GoogleJWT that was POSTed from the front-end
+	//type parameters struct {
+	//	GoogleJWT *string
+	//}
+	//decoder := json.NewDecoder(r.Body)
+	//params := parameters{}
+	//err := decoder.Decode(&params)
+	//if err != nil {
+	//	respondWithError(w, 500, "Couldn't decode parameters")
+	//	return
+	//}
+	//
+	//// Validate the JWT is valid
+	//claims, err := auth.ValidateGoogleJWT(*params.GoogleJWT)
+	//if err != nil {
+	//	respondWithError(w, 403, "Invalid google auth")
+	//	return
+	//}
+	//if claims.Email != user.Email {
+	//	respondWithError(w, 403, "Emails don't match")
+	//	return
+	//}
+
 	validToken, err := middlewares.GenerateJWT()
 	if err != nil {
 		middlewares.ErrorResponse("Failed to generate token", response)
