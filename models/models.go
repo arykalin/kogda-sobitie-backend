@@ -9,10 +9,10 @@ type Event struct {
 	Title         string             `json:"title,omitempty" bson:"title,omitempty" validate:"required"`
 	Duration      string             `json:"duration,omitempty" bson:"duration,omitempty"`
 	Link          string             `json:"link,omitempty" bson:"link,omitempty"`
-	WhoManages    string             `json:"who_manages,omitempty" bson:"who_manages,omitempty"`
-	ForWhom       string             `json:"for_whom,omitempty" bson:"for_whom,omitempty"`
+	WhoManages    string             `json:"org,omitempty" bson:"org,omitempty"`
+	ForWhom       string             `json:"target,omitempty" bson:"target,omitempty"`
 	Where         string             `json:"where,omitempty" bson:"where,omitempty"`
 	Description   string             `json:"description,omitempty" bson:"description,omitempty"`
-	WantingPeople string             `json:"wanting_people,omitempty" bson:"wanting_people,omitempty"`
+	WantingPeople string             `json:"amount,omitempty" bson:"amount,omitempty"`
 	Place         string             `json:"place,omitempty" bson:"place,omitempty"`
 }

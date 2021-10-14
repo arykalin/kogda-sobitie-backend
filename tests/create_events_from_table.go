@@ -69,11 +69,11 @@ func main() {
     "title":"%s",
     "duration":"%s",
     "link":"%s",
-    "who_manages":"%s",
-    "for_whom":"%s",
+    "org":"%s",
+    "target":"%s",
     "where":"%s",
     "description":"%s",
-    "wanting_people":"%s"
+    "amount":"%s"
 }`, event.Date,
 			event.Title,
 			event.Duration,

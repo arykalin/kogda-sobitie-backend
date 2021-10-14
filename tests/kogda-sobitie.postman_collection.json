@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"date\":\"24.09.2021\",\n    \"title\":\"Сторителинг \\\"Тепло\\\" в Чердаке\",\n    \"duration\":\"3-5 часов\",\n    \"link\":\"https://vzhuh.timepad.ru/event/1778790/\",\n    \"who_manages\":\"Янка\",\n    \"for_whom\":\"взрослые\",\n    \"where\":\"\",\n    \"description\":\"что то такое\",\n    \"wanting_people\":\"\"\n}",
+					"raw": "{\n    \"date\":\"24.09.2021\",\n    \"title\":\"Сторителинг \\\"Тепло\\\" в Чердаке\",\n    \"duration\":\"3-5 часов\",\n    \"link\":\"https://vzhuh.timepad.ru/event/1778790/\",\n    \"org\":\"Янка\",\n    \"target\":\"взрослые\",\n    \"where\":\"\",\n    \"description\":\"что то такое\",\n    \"amount\":\"\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -40,7 +40,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"date\":\"24.09.2021\",\n    \"title\":\"Чтения на среднем\",\n    \"duration\":\"3-6 часов\",\n    \"link\":\"https://vk.com/4tenia\",\n    \"who_manages\":\"Татка\",\n    \"for_whom\":\"для всех\",\n    \"where\":\"Дом Средний\",\n    \"description\":\"четния по пятницам на среднем\",\n    \"wanting_people\":\"15\"\n}",
+					"raw": "{\n    \"date\":\"24.09.2021\",\n    \"title\":\"Чтения на среднем\",\n    \"duration\":\"3-6 часов\",\n    \"link\":\"https://vk.com/4tenia\",\n    \"org\":\"Татка\",\n    \"target\":\"для всех\",\n    \"where\":\"Дом Средний\",\n    \"description\":\"четния по пятницам на среднем\",\n    \"amount\":\"15\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
