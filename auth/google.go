@@ -27,7 +27,7 @@ func GetGoogleUserInfo(t string) (UserInfo, error) {
 // google to a token verification request.
 type UserInfo struct {
 	Email         string `json:"email"`
-	EmailVerified string `json:"email_verified"`
+	EmailVerified bool   `json:"email_verified"`
 	AtHash        string `json:"at_hash"`
 	Name          string `json:"name"`
 	Picture       string `json:"picture"`

@@ -28,7 +28,7 @@ var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Re
 	//https://qvault.io/golang/how-to-implement-sign-in-with-google-in-golang/
 	idToken := request.URL.Query().Get("id_token")
 
-	_, err := auth.ValidateGoogleJWT(idToken)
+	claims, err := auth.ValidateGoogleJWT(idToken)
 	if err != nil {
 		middlewares.ErrorResponse(fmt.Sprintf("Invalid token"), response)
 	}
@@ -37,7 +37,16 @@ var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Re
 		middlewares.ErrorResponse("Failed to generate token", response)
 	}
 
-	middlewares.SuccessResponse(string(validToken), response)
+	info := models.UserInfo{
+		Email:         claims.Email,
+		EmailVerified: claims.EmailVerified,
+		Name:          fmt.Sprintf("%s %s", claims.FirstName, claims.LastName),
+		Picture:       "",
+		GivenName:     claims.FirstName,
+		FamilyName:    claims.LastName,
+		Token:         validToken,
+	}
+	middlewares.UserInfoResponse(info, response)
 })
 
 // CreateEventEndpoint -> create event

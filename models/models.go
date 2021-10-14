@@ -16,3 +16,13 @@ type Event struct {
 	Amount      string             `json:"amount,omitempty" bson:"amount,omitempty"`
 	Place       string             `json:"place,omitempty" bson:"place,omitempty"`
 }
+
+type UserInfo struct {
+	Email         string `json:"email"`
+	EmailVerified bool   `json:"email_verified"`
+	Name          string `json:"name"`
+	Picture       string `json:"picture"`
+	GivenName     string `json:"given_name"`
+	FamilyName    string `json:"family_name"`
+	Token         string `json:"token"`
+}
