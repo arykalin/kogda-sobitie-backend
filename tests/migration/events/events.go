@@ -23,6 +23,7 @@ type SheetConfig struct {
 	ForWhomIdx     int
 	WhereIdx       int
 	DescriptionIdx int
+	AmountIdx      int
 	Skip           int
 }
 
@@ -77,21 +78,28 @@ func (u *events) AddEvents(sheet *spreadsheet.Sheet, config *SheetConfig) (err e
 		if len(sheet.Rows[i]) > config.WhoManagesIdx {
 			whoManages = sheet.Rows[i][config.WhoManagesIdx].Value
 		}
-		event.WhoManages = whoManages
+		event.Org = whoManages
 
 		//	ForWhomIdx     int
 		var forWhom string
 		if len(sheet.Rows[i]) > config.ForWhomIdx {
 			forWhom = sheet.Rows[i][config.ForWhomIdx].Value
 		}
-		event.ForWhom = forWhom
+		event.Target = forWhom
 
 		//	WhereIdx     int
-		var where string
+		where := "неизвестно"
 		if len(sheet.Rows[i]) > config.WhereIdx {
 			forWhom = sheet.Rows[i][config.WhereIdx].Value
 		}
 		event.Where = where
+
+		//	AmountIdx     int
+		amount := "10"
+		if len(sheet.Rows[i]) > config.AmountIdx {
+			forWhom = sheet.Rows[i][config.AmountIdx].Value
+		}
+		event.Amount = amount
 
 		//	DescriptionIdx int
 		var description string

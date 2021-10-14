@@ -15,8 +15,8 @@ import (
 
 func main() {
 
-	//url := "http://95.216.158.138:80/event"
-	url := "http://127.0.0.1:8080/event"
+	url := "http://95.216.158.138:80/event"
+	//url := "http://127.0.0.1:8080/event"
 	method := "POST"
 
 	sLoggerConfig := zap.NewDevelopmentConfig()
@@ -52,6 +52,7 @@ func main() {
 		WhoManagesIdx:  5,
 		ForWhomIdx:     6,
 		WhereIdx:       8,
+		AmountIdx:      10,
 		Skip:           2,
 	}
 
@@ -78,11 +79,11 @@ func main() {
 			event.Title,
 			event.Duration,
 			event.Link,
-			event.WhoManages,
-			event.ForWhom,
+			event.Org,
+			event.Target,
 			event.Where,
 			event.Description,
-			event.WantingPeople))
+			event.Amount))
 
 		client := &http.Client{}
 		req, err := http.NewRequest(method, url, payload)
