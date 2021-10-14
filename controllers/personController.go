@@ -31,10 +31,12 @@ var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Re
 	claims, err := auth.ValidateGoogleJWT(idToken)
 	if err != nil {
 		middlewares.ErrorResponse(fmt.Sprintf("Invalid token"), response)
+		return
 	}
 	validToken, err := middlewares.GenerateJWT()
 	if err != nil {
 		middlewares.ErrorResponse("Failed to generate token", response)
+		return
 	}
 
 	info := models.UserInfo{
@@ -44,9 +46,8 @@ var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Re
 		Picture:       "",
 		GivenName:     claims.FirstName,
 		FamilyName:    claims.LastName,
-		Token:         validToken,
 	}
-	middlewares.UserInfoResponse(info, response)
+	middlewares.UserInfoResponse(info, validToken, response)
 })
 
 // CreateEventEndpoint -> create event

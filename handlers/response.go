@@ -67,14 +67,20 @@ func SuccessRespond(fields models.Event, writer http.ResponseWriter) {
 }
 
 // UserInfoResponse -> response formatter
-func UserInfoResponse(fields models.UserInfo, writer http.ResponseWriter) {
+func UserInfoResponse(fields models.UserInfo, token string, writer http.ResponseWriter) {
 	_, err := json.Marshal(fields)
 	type data struct {
-		UserInfo   models.UserInfo `json:"data"`
+		UserInfo   models.UserInfo `json:"userInfo"`
+		Token      string          `json:"token"`
 		Statuscode int             `json:"status"`
 		Message    string          `json:"msg"`
 	}
-	temp := &data{UserInfo: fields, Statuscode: 200, Message: "success"}
+	temp := &data{
+		UserInfo:   fields,
+		Token:      token,
+		Statuscode: 200,
+		Message:    "success",
+	}
 	if err != nil {
 		ServerErrResponse(err.Error(), writer)
 	}

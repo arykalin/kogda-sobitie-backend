@@ -24,5 +24,5 @@ type UserInfo struct {
 	Picture       string `json:"picture"`
 	GivenName     string `json:"givenName"`
 	FamilyName    string `json:"familyName"`
-	Token         string `json:"token"`
+	Role          string `json:"role"`
 }
