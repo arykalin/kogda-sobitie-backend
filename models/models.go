@@ -19,10 +19,10 @@ type Event struct {
 
 type UserInfo struct {
 	Email         string `json:"email"`
-	EmailVerified bool   `json:"email_verified"`
+	EmailVerified bool   `json:"emailVerified"`
 	Name          string `json:"name"`
 	Picture       string `json:"picture"`
-	GivenName     string `json:"given_name"`
-	FamilyName    string `json:"family_name"`
+	GivenName     string `json:"givenName"`
+	FamilyName    string `json:"familyName"`
 	Token         string `json:"token"`
 }
