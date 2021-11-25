@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -15,8 +16,8 @@ import (
 
 func main() {
 
-	url := "http://95.216.158.138:80/event"
-	//url := "http://127.0.0.1:8080/event"
+	//url := "http://95.216.158.138:80/event"
+	url := "http://127.0.0.1:8080/event"
 	method := "POST"
 
 	sLoggerConfig := zap.NewDevelopmentConfig()
@@ -65,28 +66,32 @@ func main() {
 	gotEvents := e.GetEvents()
 
 	for _, event := range gotEvents {
-		payload := strings.NewReader(fmt.Sprintf(`{
-    "date":"%s",
-    "title":"%s",
-    "duration":"%s",
-    "link":"%s",
-    "org":"%s",
-    "target":"%s",
-    "where":"%s",
-    "description":"%s",
-    "amount":"%s"
-}`, event.Date,
-			event.Title,
-			event.Duration,
-			event.Link,
-			event.Org,
-			event.Target,
-			event.Where,
-			event.Description,
-			event.Amount))
-
+		//		payload := strings.NewReader(fmt.Sprintf(`{
+		//    "date":"%s",
+		//    "title":"%s",
+		//    "duration":"%s",
+		//    "link":"%s",
+		//    "org":"%s",
+		//    "target":"%s",
+		//    "where":"%s",
+		//    "description":"%s",
+		//    "amount":"%s"
+		//}`, event.Date,
+		//			event.Title,
+		//			event.Duration,
+		//			event.Link,
+		//			event.Org,
+		//			event.Target,
+		//			event.Where,
+		//			event.Description,
+		//			event.Amount))
+		payload, err := json.Marshal(event)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		client := &http.Client{}
-		req, err := http.NewRequest(method, url, payload)
+		req, err := http.NewRequest(method, url, strings.NewReader(string(payload)))
 
 		if err != nil {
 			fmt.Println(err)
@@ -106,7 +111,22 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(string(body))
+		var resp RespData
+		err = json.Unmarshal(body, &resp)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		if resp.Statuscode != 200 {
+			fmt.Printf("ERROR inserting event %s: %v\n", event.Title, resp)
+		} else {
+			//fmt.Printf("resp for event %s: %v\n", event.Title, resp.Statuscode)
+		}
 	}
 
+}
+
+type RespData struct {
+	Statuscode int    `json:"status"`
+	Message    string `json:"msg"`
 }

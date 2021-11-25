@@ -90,14 +90,14 @@ func (u *events) AddEvents(sheet *spreadsheet.Sheet, config *SheetConfig) (err e
 		//	WhereIdx     int
 		where := "неизвестно"
 		if len(sheet.Rows[i]) > config.WhereIdx {
-			forWhom = sheet.Rows[i][config.WhereIdx].Value
+			where = sheet.Rows[i][config.WhereIdx].Value
 		}
 		event.Where = where
 
 		//	AmountIdx     int
 		amount := "10"
 		if len(sheet.Rows[i]) > config.AmountIdx {
-			forWhom = sheet.Rows[i][config.AmountIdx].Value
+			amount = sheet.Rows[i][config.AmountIdx].Value
 		}
 		event.Amount = amount
 
