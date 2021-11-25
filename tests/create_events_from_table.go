@@ -66,25 +66,6 @@ func main() {
 	gotEvents := e.GetEvents()
 
 	for _, event := range gotEvents {
-		//		payload := strings.NewReader(fmt.Sprintf(`{
-		//    "date":"%s",
-		//    "title":"%s",
-		//    "duration":"%s",
-		//    "link":"%s",
-		//    "org":"%s",
-		//    "target":"%s",
-		//    "where":"%s",
-		//    "description":"%s",
-		//    "amount":"%s"
-		//}`, event.Date,
-		//			event.Title,
-		//			event.Duration,
-		//			event.Link,
-		//			event.Org,
-		//			event.Target,
-		//			event.Where,
-		//			event.Description,
-		//			event.Amount))
 		payload, err := json.Marshal(event)
 		if err != nil {
 			fmt.Println(err)
