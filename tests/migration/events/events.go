@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"time"
 
 	"github.com/arykalin/kogda-sobitie-backend/models"
 	"go.uber.org/zap"
@@ -46,7 +47,7 @@ func (u *events) AddEvents(sheet *spreadsheet.Sheet, config *SheetConfig) (err e
 			// skip
 			continue
 		}
-		event, err := u.makeEvent(sheet.Rows[i])
+		event, err := u.makeEvent(sheet.Rows[i], config)
 		if err != nil {
 			u.logger.Errorf("failed to make event: %w", err)
 		}
@@ -73,6 +74,12 @@ func (u *events) makeEvent(cell []spreadsheet.Cell, config *SheetConfig) (event 
 	var date string
 	if len(cell) > config.DateIdx {
 		date = cell[config.DateIdx].Value
+		cellLayout := "02.01.2006"
+		t, err := time.Parse(cellLayout, date)
+		if err != nil {
+			return event, fmt.Errorf("failed to parse date: %s", err)
+		}
+		date = t.Format("")
 	}
 	event.Date = date
 
