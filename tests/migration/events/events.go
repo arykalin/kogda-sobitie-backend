@@ -49,7 +49,8 @@ func (u *events) AddEvents(sheet *spreadsheet.Sheet, config *SheetConfig) (err e
 		}
 		event, err := u.makeEvent(sheet.Rows[i], config)
 		if err != nil {
-			u.logger.Errorf("failed to make event: %w", err)
+			u.logger.Errorf("failed to make event with title: %s err: %w", event.Title, err)
+			continue
 		}
 		u.events = append(u.events, event)
 	}
@@ -70,6 +71,13 @@ func (u events) DumpUsers() error {
 }
 
 func (u *events) makeEvent(cell []spreadsheet.Cell, config *SheetConfig) (event models.Event, err error) {
+	//	TitleIdx       int
+	var title string
+	if len(cell) > config.TitleIdx {
+		title = cell[config.TitleIdx].Value
+	}
+	event.Title = title
+
 	//	DateIdx        int
 	var date string
 	if len(cell) > config.DateIdx {
@@ -79,16 +87,9 @@ func (u *events) makeEvent(cell []spreadsheet.Cell, config *SheetConfig) (event 
 		if err != nil {
 			return event, fmt.Errorf("failed to parse date: %s", err)
 		}
-		date = t.Format("")
+		date = t.Format(cellLayout)
 	}
 	event.Date = date
-
-	//	TitleIdx       int
-	var title string
-	if len(cell) > config.TitleIdx {
-		title = cell[config.TitleIdx].Value
-	}
-	event.Title = title
 
 	//	DurationIdx    int
 	var duration string
@@ -147,6 +148,9 @@ func (u *events) makeEvent(cell []spreadsheet.Cell, config *SheetConfig) (event 
 func (u *events) validate(event models.Event) (models.Event, error) {
 	if event.Title == "" {
 		return event, fmt.Errorf("missing title")
+	}
+	if event.Date == "" {
+		return event, fmt.Errorf("missing date")
 	}
 	return event, nil
 }
