@@ -82,6 +82,9 @@ func (u *events) makeEvent(cell []spreadsheet.Cell, config *SheetConfig) (event 
 	var date string
 	if len(cell) > config.DateIdx {
 		date = cell[config.DateIdx].Value
+		if date == "21.12" {
+			date = "21.12.2021"
+		}
 		cellLayout := "02.01.2006"
 		t, err := time.Parse(cellLayout, date)
 		if err != nil {
