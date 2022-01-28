@@ -142,13 +142,37 @@ var DeleteEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, re
 var UpdateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	type fname struct {
-		Firstname string `json:"firstname"`
+	var (
+		event    models.Event
+		oldEvent models.Event
+	)
+
+	err := json.NewDecoder(request.Body).Decode(&event)
+	if err != nil {
+		middlewares.ServerErrResponse(err.Error(), response)
+		return
 	}
-	var fir fname
-	json.NewDecoder(request.Body).Decode(&fir)
+	if ok, errors := validators.ValidateInputs(event); !ok {
+		middlewares.ValidationResponse(errors, response)
+		return
+	}
+
 	collection := client.Database("golang").Collection("events")
-	res, err := collection.UpdateOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}, bson.D{primitive.E{Key: "$set", Value: bson.D{primitive.E{Key: "firstname", Value: fir.Firstname}}}})
+	err = collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&oldEvent)
+	if err != nil {
+		middlewares.ErrorResponse("Event does not exist", response)
+		return
+	}
+	data, err := bson.Marshal(event)
+	if err != nil {
+		middlewares.ErrorResponse("Failed to marshal event", response)
+		return
+	}
+	res, err := collection.ReplaceOne(
+		context.TODO(),
+		bson.D{primitive.E{Key: "_id", Value: id}},
+		data,
+	)
 	if err != nil {
 		middlewares.ServerErrResponse(err.Error(), response)
 		return

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/arykalin/kogda-sobitie-backend/auth"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
@@ -29,8 +30,17 @@ func IsAuthorized(next http.Handler) http.HandlerFunc {
 				AuthorizationResponse("Invalid JWT token", w)
 			}
 
-			if token.Valid {
+			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+				client, ok := claims["client"].(string)
+				if !ok {
+					AuthorizationResponse("Not Authorized: failed to get client from jwt claim", w)
+				}
+				if !auth.UserIsValid(client) {
+					AuthorizationResponse(fmt.Sprintf("Not Authorized: user %s not found", client), w)
+				}
 				next.ServeHTTP(w, r)
+			} else {
+				AuthorizationResponse("Not Authorized", w)
 			}
 		} else {
 			AuthorizationResponse("Not Authorized", w)
