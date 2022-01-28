@@ -39,14 +39,14 @@ func IsAuthorized(next http.Handler) http.HandlerFunc {
 }
 
 // GenerateJWT -> generate jwt
-func GenerateJWT() (string, error) {
+func GenerateJWT(client string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
-	claims["client"] = "Elliot Forbes"
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
+	claims["client"] = client
+	claims["exp"] = time.Now().Add(time.Hour * 8760).Unix()
 
 	tokenString, err := token.SignedString(mySigningKey)
 

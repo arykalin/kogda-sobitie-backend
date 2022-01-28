@@ -33,7 +33,12 @@ var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Re
 		middlewares.ErrorResponse(fmt.Sprintf("Invalid token"), response)
 		return
 	}
-	validToken, err := middlewares.GenerateJWT()
+	if !claims.EmailVerified {
+		middlewares.ErrorResponse("Email is not verified", response)
+		return
+	}
+
+	validToken, err := middlewares.GenerateJWT(claims.Email)
 	if err != nil {
 		middlewares.ErrorResponse("Failed to generate token", response)
 		return
