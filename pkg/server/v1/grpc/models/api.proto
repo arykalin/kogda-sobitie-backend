@@ -29,20 +29,75 @@ message SubscribeResponse {
   repeated Event events = 3;
 }
 
+message Event {
+  string date = 1;
+  string title = 2;
+  string duration = 3;
+  string link = 4;
+  string org = 5;
+  string target = 6;
+  string where = 7;
+  string description = 8;
+  string amount = 9;
+  string place = 10;
+}
+
+message AuthenticateRequest {
+  string login = 1;
+  string password = 2;
+  string id_token = 3;
+}
+
+message AuthenticateResponse {
+  string token = 1;
+}
+
+message CreateEventRequest {
+  string date = 1;
+  string title = 2;
+  string duration = 3;
+  string link = 4;
+  string org = 5;
+  string target = 6;
+  string where = 7;
+  string description = 8;
+  string amount = 9;
+  string place = 10;
+}
+
+message CreateEventResponse {
+  Event event = 1;
+}
+
 service ApiService {
-  rpc Address (AddressRequest) returns (AddressResponse) {
+  rpc Authenticate (AuthenticateRequest) returns (AuthenticateResponse) {
     option (google.api.http) = {
-      get: "/address/{address}"
+      post: "/authenticate"
     };
   }
-  rpc DownloadFile(google.protobuf.Empty) returns (google.api.HttpBody) {
+  rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse) {
     option (google.api.http) = {
-      get: "/file.txt"
+      post: "/event"
     };
   }
-  rpc Subscribe (SubscribeRequest) returns (stream SubscribeResponse) {
+  rpc GetEvent (GetEventRequest) returns (GetEventResponse) {
     option (google.api.http) = {
-      get: "/subscribe"
+      get: "/event/{event}"
+    };
+  }
+  rpc DeleteEvent (DeleteEventRequest) returns (DeleteEventResponse) {
+    option (google.api.http) = {
+      delete: "/event/{event}"
+    };
+  }
+  rpc UpdateEvent (UpdateEventRequest) returns (UpdateEventResponse) {
+    option (google.api.http) = {
+      put: "/event/{event}"
+    };
+  }
+  rpc ListEvents (ListEventsRequest) returns (ListEventsResponse) {
+    option (google.api.http) = {
+      get: "/events"
     };
   }
 }

@@ -13,6 +13,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.11.2 // indirect
+	github.com/klim0v/grpc-gateway-example v0.0.0-20200421090150-0b0c1702054d
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/rs/cors v1.7.0
 	go.mongodb.org/mongo-driver v1.4.2

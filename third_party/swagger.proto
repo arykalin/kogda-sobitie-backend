@@ -1,0 +1,33 @@
+
+syntax = "proto3";
+
+import "third_party/protoc-gen-swagger-annotations.proto";
+import "google/rpc/status.proto";
+
+package api_pb;
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "Metaver Service"
+    version: "1.0"
+    contact: {
+      name: "Alexander Rykalin"
+      url: "https://github.com/arykalin"
+      email: ""
+    };
+  };
+  schemes: [HTTP,HTTPS,WS,WSS]
+  consumes: "application/json"
+  produces: "application/json"
+  responses: {
+    key: "default"
+    value: {
+      description: ""
+      schema: {
+        json_schema: {
+          ref: ".google.rpc.Status"
+        };
+      };
+    };
+  };
+};
