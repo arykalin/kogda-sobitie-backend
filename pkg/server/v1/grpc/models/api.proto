@@ -8,27 +8,6 @@ import "google/protobuf/struct.proto";
 import "google/api/httpbody.proto";
 import "google/protobuf/empty.proto";
 
-message AddressRequest {
-  string address = 1;
-  uint64 height = 2;
-}
-message AddressResponse {
-  map<string, string> balance = 1;
-  string transactions_count = 2;
-}
-message SubscribeRequest {
-  string query = 1;
-}
-message SubscribeResponse {
-  string query = 1;
-  google.protobuf.Struct data = 2;
-  message Event {
-    string key = 1;
-    repeated string events = 2;
-  }
-  repeated Event events = 3;
-}
-
 message Event {
   string date = 1;
   string title = 2;
@@ -69,6 +48,48 @@ message CreateEventResponse {
   Event event = 1;
 }
 
+message GetEventRequest {
+  string eventId = 1;
+}
+
+message GetEventResponse {
+  Event eventId = 1;
+}
+
+message DeleteEventRequest {
+  string eventId = 1;
+}
+
+message DeleteEventResponse {
+  Event event = 1;
+}
+
+message UpdateEventRequest {
+  string eventId = 1;
+  string date = 2;
+  string title = 3;
+  string duration = 4;
+  string link = 5;
+  string org = 6;
+  string target = 7;
+  string where = 8;
+  string description = 9;
+  string amount = 10;
+  string place = 11;
+}
+
+message UpdateEventResponse {
+  Event event = 1;
+}
+
+message ListEventsRequest {
+  string date = 1;
+}
+
+message ListEventsResponse {
+  repeated Event events = 1;
+}
+
 service ApiService {
   rpc Authenticate (AuthenticateRequest) returns (AuthenticateResponse) {
     option (google.api.http) = {
@@ -82,17 +103,17 @@ service ApiService {
   }
   rpc GetEvent (GetEventRequest) returns (GetEventResponse) {
     option (google.api.http) = {
-      get: "/event/{event}"
+      get: "/event/{eventId}"
     };
   }
   rpc DeleteEvent (DeleteEventRequest) returns (DeleteEventResponse) {
     option (google.api.http) = {
-      delete: "/event/{event}"
+      delete: "/event/{eventId}"
     };
   }
   rpc UpdateEvent (UpdateEventRequest) returns (UpdateEventResponse) {
     option (google.api.http) = {
-      put: "/event/{event}"
+      put: "/event/{eventId}"
     };
   }
   rpc ListEvents (ListEventsRequest) returns (ListEventsResponse) {

@@ -13,7 +13,6 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.11.2 // indirect
-	github.com/klim0v/grpc-gateway-example v0.0.0-20200421090150-0b0c1702054d
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/rs/cors v1.7.0
 	go.mongodb.org/mongo-driver v1.4.2
@@ -26,6 +25,7 @@ require (
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/Iwark/spreadsheet.v2 v2.0.0-20191122095212-08231195c43b
+	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 )
