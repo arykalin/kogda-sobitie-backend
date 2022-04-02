@@ -29,7 +29,7 @@ message SubscribeResponse {
   repeated Event events = 3;
 }
 
-service BlockchainService {
+service ApiService {
   rpc Address (AddressRequest) returns (AddressResponse) {
     option (google.api.http) = {
       get: "/address/{address}"

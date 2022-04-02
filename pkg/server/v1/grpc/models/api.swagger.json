@@ -13,7 +13,7 @@
   "paths": {
     "/address/{address}": {
       "get": {
-        "operationId": "BlockchainService_Address",
+        "operationId": "ApiService_Address",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -44,13 +44,13 @@
           }
         ],
         "tags": [
-          "BlockchainService"
+          "ApiService"
         ]
       }
     },
     "/file.txt": {
       "get": {
-        "operationId": "BlockchainService_DownloadFile",
+        "operationId": "ApiService_DownloadFile",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -66,13 +66,13 @@
           }
         },
         "tags": [
-          "BlockchainService"
+          "ApiService"
         ]
       }
     },
     "/subscribe": {
       "get": {
-        "operationId": "BlockchainService_Subscribe",
+        "operationId": "ApiService_Subscribe",
         "responses": {
           "200": {
             "description": "A successful response.(streaming responses)",
@@ -105,7 +105,7 @@
           }
         ],
         "tags": [
-          "BlockchainService"
+          "ApiService"
         ]
       }
     }
