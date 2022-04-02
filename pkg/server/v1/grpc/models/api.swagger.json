@@ -18,7 +18,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/api_pbAuthenticateResponse"
+              "$ref": "#/definitions/grpcAuthenticateResponse"
             }
           },
           "default": {
@@ -40,7 +40,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/api_pbCreateEventResponse"
+              "$ref": "#/definitions/grpcCreateEventResponse"
             }
           },
           "default": {
@@ -62,7 +62,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/api_pbGetEventResponse"
+              "$ref": "#/definitions/grpcGetEventResponse"
             }
           },
           "default": {
@@ -90,7 +90,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/api_pbDeleteEventResponse"
+              "$ref": "#/definitions/grpcDeleteEventResponse"
             }
           },
           "default": {
@@ -118,7 +118,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/api_pbUpdateEventResponse"
+              "$ref": "#/definitions/grpcUpdateEventResponse"
             }
           },
           "default": {
@@ -148,7 +148,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/api_pbListEventsResponse"
+              "$ref": "#/definitions/grpcListEventsResponse"
             }
           },
           "default": {
@@ -173,7 +173,7 @@
     }
   },
   "definitions": {
-    "api_pbAuthenticateResponse": {
+    "grpcAuthenticateResponse": {
       "type": "object",
       "properties": {
         "token": {
@@ -181,23 +181,23 @@
         }
       }
     },
-    "api_pbCreateEventResponse": {
+    "grpcCreateEventResponse": {
       "type": "object",
       "properties": {
         "event": {
-          "$ref": "#/definitions/api_pbEvent"
+          "$ref": "#/definitions/grpcEvent"
         }
       }
     },
-    "api_pbDeleteEventResponse": {
+    "grpcDeleteEventResponse": {
       "type": "object",
       "properties": {
         "event": {
-          "$ref": "#/definitions/api_pbEvent"
+          "$ref": "#/definitions/grpcEvent"
         }
       }
     },
-    "api_pbEvent": {
+    "grpcEvent": {
       "type": "object",
       "properties": {
         "date": {
@@ -232,30 +232,30 @@
         }
       }
     },
-    "api_pbGetEventResponse": {
+    "grpcGetEventResponse": {
       "type": "object",
       "properties": {
         "eventId": {
-          "$ref": "#/definitions/api_pbEvent"
+          "$ref": "#/definitions/grpcEvent"
         }
       }
     },
-    "api_pbListEventsResponse": {
+    "grpcListEventsResponse": {
       "type": "object",
       "properties": {
         "events": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/api_pbEvent"
+            "$ref": "#/definitions/grpcEvent"
           }
         }
       }
     },
-    "api_pbUpdateEventResponse": {
+    "grpcUpdateEventResponse": {
       "type": "object",
       "properties": {
         "event": {
-          "$ref": "#/definitions/api_pbEvent"
+          "$ref": "#/definitions/grpcEvent"
         }
       }
     },

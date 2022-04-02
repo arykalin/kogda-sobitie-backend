@@ -2,11 +2,11 @@
 // source: pkg/server/v1/grpc/models/api.proto
 
 /*
-Package server is a reverse proxy.
+Package grpcModels is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package server
+package grpcModels
 
 import (
 	"context"
@@ -326,7 +326,7 @@ func RegisterApiServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api_pb.ApiService/Authenticate", runtime.WithHTTPPathPattern("/authenticate"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/models.grpc.ApiService/Authenticate", runtime.WithHTTPPathPattern("/authenticate"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -350,7 +350,7 @@ func RegisterApiServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api_pb.ApiService/CreateEvent", runtime.WithHTTPPathPattern("/event"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/models.grpc.ApiService/CreateEvent", runtime.WithHTTPPathPattern("/event"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -374,7 +374,7 @@ func RegisterApiServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api_pb.ApiService/GetEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/models.grpc.ApiService/GetEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -398,7 +398,7 @@ func RegisterApiServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api_pb.ApiService/DeleteEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/models.grpc.ApiService/DeleteEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -422,7 +422,7 @@ func RegisterApiServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api_pb.ApiService/UpdateEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/models.grpc.ApiService/UpdateEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -446,7 +446,7 @@ func RegisterApiServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api_pb.ApiService/ListEvents", runtime.WithHTTPPathPattern("/events"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/models.grpc.ApiService/ListEvents", runtime.WithHTTPPathPattern("/events"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -509,7 +509,7 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api_pb.ApiService/Authenticate", runtime.WithHTTPPathPattern("/authenticate"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/models.grpc.ApiService/Authenticate", runtime.WithHTTPPathPattern("/authenticate"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -530,7 +530,7 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api_pb.ApiService/CreateEvent", runtime.WithHTTPPathPattern("/event"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/models.grpc.ApiService/CreateEvent", runtime.WithHTTPPathPattern("/event"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -551,7 +551,7 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api_pb.ApiService/GetEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/models.grpc.ApiService/GetEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -572,7 +572,7 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api_pb.ApiService/DeleteEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/models.grpc.ApiService/DeleteEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -593,7 +593,7 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api_pb.ApiService/UpdateEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/models.grpc.ApiService/UpdateEvent", runtime.WithHTTPPathPattern("/event/{eventId}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -614,7 +614,7 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api_pb.ApiService/ListEvents", runtime.WithHTTPPathPattern("/events"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/models.grpc.ApiService/ListEvents", runtime.WithHTTPPathPattern("/events"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
