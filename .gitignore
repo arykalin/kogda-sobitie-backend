@@ -24,4 +24,4 @@ vendor/
 
 client_secret.json
 /tests/client_secret.json
-/auth/google-auth-sample/
+/internal/auth/google-auth-sample/

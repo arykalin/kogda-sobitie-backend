@@ -1,50 +1,49 @@
-package controllers
+package eventController
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
+
 	"log"
-	"net/http"
-	"os"
+
 	"strings"
 
-	"github.com/arykalin/kogda-sobitie-backend/auth"
 	"github.com/arykalin/kogda-sobitie-backend/db"
 	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
+	"github.com/arykalin/kogda-sobitie-backend/internal/auth"
 	"github.com/arykalin/kogda-sobitie-backend/models"
 	"github.com/arykalin/kogda-sobitie-backend/validators"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var client = db.Dbconnect()
 
-// Auths -> get token
-var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+type controller struct {
+	dbClient *mongo.Client
+}
+
+func (c *controller) Authenticate(req models.AuthenticateRequest) (resp models.AuthenticateResponse, err error) {
 	//TODO: generate token only for valid google users
 	//https://qvault.io/golang/how-to-implement-sign-in-with-google-in-golang/
-	idToken := request.URL.Query().Get("id_token")
 
-	claims, err := auth.ValidateGoogleJWT(idToken)
+	claims, err := auth.ValidateGoogleJWT(req.GoogleToken)
 	if err != nil {
-		middlewares.ErrorResponse(fmt.Sprintf("Invalid token"), response)
 		return
 	}
 	if !claims.EmailVerified {
-		middlewares.ErrorResponse("Email is not verified", response)
-		return
+		return resp, fmt.Errorf("email is not verified")
 	}
 
 	validToken, err := middlewares.GenerateJWT(claims.Email)
 	if err != nil {
-		middlewares.ErrorResponse("Failed to generate token", response)
-		return
+		return resp, fmt.Errorf("failed to generate token: %w", err)
 	}
 
-	info := models.UserInfo{
+	info := models.Account{
 		Email:         claims.Email,
 		EmailVerified: claims.EmailVerified,
 		Name:          fmt.Sprintf("%s %s", claims.FirstName, claims.LastName),
@@ -53,12 +52,13 @@ var Auths = http.HandlerFunc(func(response http.ResponseWriter, request *http.Re
 		FamilyName:    claims.LastName,
 	}
 	middlewares.UserInfoResponse(info, validToken, response)
-})
+	return
+}
 
 // CreateEventEndpoint -> create event
-var CreateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+func (c *controller) CreateEventEndpoint(req models.CreateEventRequest) (resp models.CreateEventResponse, err error) {
 	var event models.Event
-	err := json.NewDecoder(request.Body).Decode(&event)
+	err := json.NewDecoder(req.Body).Decode(&event)
 	if err != nil {
 		middlewares.ServerErrResponse(err.Error(), response)
 		return
@@ -75,10 +75,10 @@ var CreateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, re
 	}
 	res, _ := json.Marshal(result.InsertedID)
 	middlewares.SuccessResponse(`Inserted at `+strings.Replace(string(res), `"`, ``, 2), response)
-})
+}
 
 // GetEventsEndpoint -> get events
-var GetEventsEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+func (c *controller) GetEventsEndpoint(req models.ListEventsRequest) (resp models.ListEventsResponse, err error) {
 	var events []*models.Event
 
 	collection := client.Database("golang").Collection("events")
@@ -101,11 +101,11 @@ var GetEventsEndpoint = http.HandlerFunc(func(response http.ResponseWriter, requ
 		return
 	}
 	middlewares.SuccessArrRespond(events, response)
-})
+}
 
 // GetEventEndpoint -> get event by id
-var GetEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-	params := mux.Vars(request)
+func (c *controller) GetEventEndpoint(req models.GetEventRequest) (resp models.GetEventResponse, err error) {
+	params := mux.Vars(req)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
 	var event models.Event
 
@@ -116,11 +116,11 @@ var GetEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, reque
 		return
 	}
 	middlewares.SuccessRespond(event, response)
-})
+}
 
 // DeleteEventEndpoint -> delete event by id
-var DeleteEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-	params := mux.Vars(request)
+func (c *controller) DeleteEventEndpoint(req models.DeleteEventRequest) (resp models.DeleteEventResponse, err error) {
+	params := mux.Vars(req)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
 	var event models.Event
 
@@ -136,37 +136,40 @@ var DeleteEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, re
 		return
 	}
 	middlewares.SuccessResponse("Deleted", response)
-})
+}
 
 // UpdateEventEndpoint -> update event by id
-var UpdateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-	params := mux.Vars(request)
-	id, _ := primitive.ObjectIDFromHex(params["id"])
+func (c *controller) UpdateEventEndpoint(req models.UpdateEventRequest) (resp models.UpdateEventResponse, err error) {
+	id, _ := primitive.ObjectIDFromHex(req.EventId)
 	var (
-		event    models.Event
+		event = models.Event{
+			ID:          id,
+			Date:        req.Date,
+			Title:       req.Title,
+			Duration:    req.Duration,
+			Link:        req.Link,
+			Org:         req.Org,
+			Target:      req.Target,
+			Where:       req.Where,
+			Description: req.Description,
+			Amount:      req.Amount,
+			Place:       req.Place,
+		}
 		oldEvent models.Event
 	)
 
-	err := json.NewDecoder(request.Body).Decode(&event)
-	if err != nil {
-		middlewares.ServerErrResponse(err.Error(), response)
-		return
-	}
 	if ok, errors := validators.ValidateInputs(event); !ok {
-		middlewares.ValidationResponse(errors, response)
-		return
+		return resp, fmt.Errorf("validation errors: %v", errors)
 	}
 
 	collection := client.Database("golang").Collection("events")
 	err = collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&oldEvent)
 	if err != nil {
-		middlewares.ErrorResponse("Event does not exist", response)
-		return
+		return resp, fmt.Errorf("event does not exist: %w", err)
 	}
 	data, err := bson.Marshal(event)
 	if err != nil {
-		middlewares.ErrorResponse("Failed to marshal event", response)
-		return
+		return resp, fmt.Errorf("failed to marshal event: %w", err)
 	}
 	res, err := collection.ReplaceOne(
 		context.TODO(),
@@ -174,31 +177,16 @@ var UpdateEventEndpoint = http.HandlerFunc(func(response http.ResponseWriter, re
 		data,
 	)
 	if err != nil {
-		middlewares.ServerErrResponse(err.Error(), response)
-		return
+		return resp, fmt.Errorf("failed to update event: %w", err)
 	}
 	if res.MatchedCount == 0 {
 		middlewares.ErrorResponse("Event does not exist", response)
 		return
 	}
 	middlewares.SuccessResponse("Updated", response)
-})
+	return
+}
 
-// UploadFileEndpoint -> upload file
-var UploadFileEndpoint = http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-	file, handler, err := request.FormFile("file")
-	// fileName := request.FormValue("file_name")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	f, err := os.OpenFile("uploaded/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-	_, _ = io.Copy(f, file)
-
-	middlewares.SuccessResponse("Uploaded Successfully", response)
-})
+func NewController(dbClient *mongo.Client) *controller {
+	return &controller{dbClient: dbClient}
+}

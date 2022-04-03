@@ -17,12 +17,13 @@ type Event struct {
 	Place       string             `json:"place,omitempty" bson:"place,omitempty"`
 }
 
-type UserInfo struct {
-	Email         string `json:"email"`
-	EmailVerified bool   `json:"emailVerified"`
-	Name          string `json:"name"`
-	Picture       string `json:"picture"`
-	GivenName     string `json:"givenName"`
-	FamilyName    string `json:"familyName"`
-	Role          string `json:"role"`
+type Account struct {
+	ID            primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Email         string             `json:"email" bson:"email"`
+	EmailVerified bool               `json:"emailVerified" bson:"emailVerified"`
+	Name          string             `json:"name" bson:"name"`
+	Picture       string             `json:"picture" bson:"picture"`
+	GivenName     string             `json:"givenName" bson:"givenName"`
+	FamilyName    string             `json:"familyName" bson:"familyName"`
+	Role          string             `json:"role" bson:"role"`
 }

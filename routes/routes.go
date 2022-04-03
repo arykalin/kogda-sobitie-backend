@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/arykalin/kogda-sobitie-backend/controllers"
 	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
+	"github.com/arykalin/kogda-sobitie-backend/internal/event_controller"
 	"github.com/gorilla/mux"
 )
 
@@ -18,12 +18,12 @@ import (
 func Routes() *mux.Router {
 	router := mux.NewRouter()
 	//router.HandleFunc("/event", middlewares.IsAuthorized(controllers.CreateEventEndpoint)).Methods("POST")
-	router.HandleFunc("/event", middlewares.IsAuthorized(controllers.CreateEventEndpoint)).Methods("POST")
-	router.HandleFunc("/auth", controllers.Auths).Methods("GET")
-	router.HandleFunc("/events", controllers.GetEventsEndpoint).Methods("GET")
-	router.HandleFunc("/event/{id}", controllers.GetEventEndpoint).Methods("GET")
-	router.HandleFunc("/event/{id}", middlewares.IsAuthorized(controllers.DeleteEventEndpoint)).Methods("DELETE")
-	router.HandleFunc("/event/{id}", middlewares.IsAuthorized(controllers.UpdateEventEndpoint)).Methods("PUT")
+	router.HandleFunc("/event", middlewares.IsAuthorized(event_controller.CreateEventEndpoint)).Methods("POST")
+	router.HandleFunc("/auth", event_controller.Auths).Methods("GET")
+	router.HandleFunc("/events", event_controller.GetEventsEndpoint).Methods("GET")
+	router.HandleFunc("/event/{id}", event_controller.GetEventEndpoint).Methods("GET")
+	router.HandleFunc("/event/{id}", middlewares.IsAuthorized(event_controller.DeleteEventEndpoint)).Methods("DELETE")
+	router.HandleFunc("/event/{id}", middlewares.IsAuthorized(event_controller.UpdateEventEndpoint)).Methods("PUT")
 	//router.HandleFunc("/upload", middlewares.IsAuthorized(controllers.UploadFileEndpoint)).Methods("POST")
 	//router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./uploaded/"))))
 	return router
