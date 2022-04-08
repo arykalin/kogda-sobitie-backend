@@ -5,13 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 
 	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
 	"github.com/arykalin/kogda-sobitie-backend/internal/auth"
 	"github.com/arykalin/kogda-sobitie-backend/models"
 	"github.com/arykalin/kogda-sobitie-backend/validators"
-	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -85,7 +83,7 @@ func (c *controller) CreateEvent(req models.CreateEventRequest) (resp models.Cre
 
 // ListEvents -> get events
 func (c *controller) ListEvents(req models.ListEventsRequest) (resp models.ListEventsResponse, err error) {
-	var events []*models.Event
+	var events []models.Event
 
 	cursor, err := c.collection.Find(context.TODO(), bson.D{{}})
 	if err != nil {
@@ -98,7 +96,7 @@ func (c *controller) ListEvents(req models.ListEventsRequest) (resp models.ListE
 			log.Fatal(err)
 		}
 
-		events = append(events, &event)
+		events = append(events, event)
 	}
 	if err := cursor.Err(); err != nil {
 		return resp, fmt.Errorf("failed to decode events: %w", err)
@@ -119,22 +117,16 @@ func (c *controller) GetEvent(req models.GetEventRequest) (resp models.GetEventR
 
 // DeleteEventEndpoint -> delete event by id
 func (c *controller) DeleteEventEndpoint(req models.DeleteEventRequest) (resp models.DeleteEventResponse, err error) {
-	params := mux.Vars(req)
-	id, _ := primitive.ObjectIDFromHex(params["id"])
-	var event models.Event
-
-	collection := client.Database("golang").Collection("events")
-	err := collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&event)
+	id, _ := primitive.ObjectIDFromHex(req.EventId)
+	err = c.collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&resp.Event)
 	if err != nil {
-		middlewares.ErrorResponse("Event does not exist", response)
-		return
+		return resp, fmt.Errorf("failed to find event: %w", err)
 	}
-	_, derr := collection.DeleteOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}})
-	if derr != nil {
-		middlewares.ServerErrResponse(derr.Error(), response)
-		return
+	_, err = c.collection.DeleteOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}})
+	if err != nil {
+		return resp, fmt.Errorf("failed to delete event: %w", err)
 	}
-	middlewares.SuccessResponse("Deleted", response)
+	return resp, nil
 }
 
 // UpdateEventEndpoint -> update event by id
@@ -161,8 +153,7 @@ func (c *controller) UpdateEventEndpoint(req models.UpdateEventRequest) (resp mo
 		return resp, fmt.Errorf("validation errors: %v", errors)
 	}
 
-	collection := client.Database("golang").Collection("events")
-	err = collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&oldEvent)
+	err = c.collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&oldEvent)
 	if err != nil {
 		return resp, fmt.Errorf("event does not exist: %w", err)
 	}
@@ -170,7 +161,7 @@ func (c *controller) UpdateEventEndpoint(req models.UpdateEventRequest) (resp mo
 	if err != nil {
 		return resp, fmt.Errorf("failed to marshal event: %w", err)
 	}
-	res, err := collection.ReplaceOne(
+	res, err := c.collection.ReplaceOne(
 		context.TODO(),
 		bson.D{primitive.E{Key: "_id", Value: id}},
 		data,
@@ -179,10 +170,9 @@ func (c *controller) UpdateEventEndpoint(req models.UpdateEventRequest) (resp mo
 		return resp, fmt.Errorf("failed to update event: %w", err)
 	}
 	if res.MatchedCount == 0 {
-		middlewares.ErrorResponse("Event does not exist", response)
-		return
+		return resp, fmt.Errorf("event does not exist")
 	}
-	middlewares.SuccessResponse("Updated", response)
+	resp.Event = event
 	return
 }
 
