@@ -8,16 +8,21 @@ import (
 )
 
 func main() {
-	zapLogger, err := zap.NewDevelopment()
+	sLoggerConfig := zap.NewDevelopmentConfig()
+	sLoggerConfig.DisableStacktrace = true
+	sLoggerConfig.DisableCaller = true
+	sLogger, err := sLoggerConfig.Build()
 	if err != nil {
 		panic(fmt.Errorf("failed to create logger: %v", err))
 	}
-	s, err := server.NewService(zapLogger)
+	logger := sLogger.Sugar()
+
+	s, err := server.NewService(logger)
 	if err != nil {
-		zapLogger.Fatal("failed to create service", zap.Error(err))
+		logger.Fatal("failed to create service", zap.Error(err))
 	}
 	err = s.Start()
 	if err != nil {
-		zapLogger.Fatal("failed to start service", zap.Error(err))
+		logger.Fatal("failed to start service", zap.Error(err))
 	}
 }

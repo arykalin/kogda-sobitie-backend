@@ -20,7 +20,7 @@ type Service struct {
 	mux                *runtime.ServeMux
 	opts               []grpc.DialOption
 	grpcServerEndpoint string
-	logger             *zap.Logger
+	logger             *zap.SugaredLogger
 	httpServerEndpoint string
 }
 
@@ -45,7 +45,7 @@ func (s *Service) Start() error {
 	return group.Wait()
 }
 
-func NewService(logger *zap.Logger) (*Service, error) {
+func NewService(logger *zap.SugaredLogger) (*Service, error) {
 	ctx := context.Background()
 	var grpcServer = grpc.NewServer()
 	grpcServer.RegisterService(&grpcModels.ApiService_ServiceDesc, grpcHandler.NewHandler())
