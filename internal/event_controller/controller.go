@@ -22,7 +22,7 @@ type controller struct {
 	collection *mongo.Collection
 }
 
-func (c *controller) Authenticate(req models.AuthenticateRequest) (resp models.AuthenticateResponse, err error) {
+func (c *controller) Authenticate(ctx context.Context, req models.AuthenticateRequest) (resp models.AuthenticateResponse, err error) {
 	//TODO: generate token only for valid google users
 	//https://qvault.io/golang/how-to-implement-sign-in-with-google-in-golang/
 
@@ -53,7 +53,7 @@ func (c *controller) Authenticate(req models.AuthenticateRequest) (resp models.A
 }
 
 // CreateEvent -> create event
-func (c *controller) CreateEvent(req models.CreateEventRequest) (resp models.CreateEventResponse, err error) {
+func (c *controller) CreateEvent(ctx context.Context, req models.CreateEventRequest) (resp models.CreateEventResponse, err error) {
 	event := models.Event{
 		ID:          primitive.ObjectID{},
 		Date:        req.Date,
@@ -82,7 +82,7 @@ func (c *controller) CreateEvent(req models.CreateEventRequest) (resp models.Cre
 }
 
 // ListEvents -> get events
-func (c *controller) ListEvents(req models.ListEventsRequest) (resp models.ListEventsResponse, err error) {
+func (c *controller) ListEvents(ctx context.Context, req models.ListEventsRequest) (resp models.ListEventsResponse, err error) {
 	var events []models.Event
 
 	cursor, err := c.collection.Find(context.TODO(), bson.D{{}})
@@ -106,7 +106,7 @@ func (c *controller) ListEvents(req models.ListEventsRequest) (resp models.ListE
 }
 
 // GetEvent -> get event by id
-func (c *controller) GetEvent(req models.GetEventRequest) (resp models.GetEventResponse, err error) {
+func (c *controller) GetEvent(ctx context.Context, req models.GetEventRequest) (resp models.GetEventResponse, err error) {
 	eventID, err := primitive.ObjectIDFromHex(req.EventId)
 	err = c.collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: eventID}}).Decode(&resp.Event)
 	if err != nil {
@@ -115,8 +115,8 @@ func (c *controller) GetEvent(req models.GetEventRequest) (resp models.GetEventR
 	return resp, nil
 }
 
-// DeleteEventEndpoint -> delete event by id
-func (c *controller) DeleteEventEndpoint(req models.DeleteEventRequest) (resp models.DeleteEventResponse, err error) {
+// DeleteEvent -> delete event by id
+func (c *controller) DeleteEvent(ctx context.Context, req models.DeleteEventRequest) (resp models.DeleteEventResponse, err error) {
 	id, _ := primitive.ObjectIDFromHex(req.EventId)
 	err = c.collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&resp.Event)
 	if err != nil {
@@ -129,8 +129,8 @@ func (c *controller) DeleteEventEndpoint(req models.DeleteEventRequest) (resp mo
 	return resp, nil
 }
 
-// UpdateEventEndpoint -> update event by id
-func (c *controller) UpdateEventEndpoint(req models.UpdateEventRequest) (resp models.UpdateEventResponse, err error) {
+// UpdateEvent -> update event by id
+func (c *controller) UpdateEvent(ctx context.Context, req models.UpdateEventRequest) (resp models.UpdateEventResponse, err error) {
 	id, _ := primitive.ObjectIDFromHex(req.EventId)
 	var (
 		event = models.Event{
@@ -180,7 +180,7 @@ func NewController(
 	dbClient *mongo.Client,
 	collection *mongo.Collection,
 	logger *zap.SugaredLogger,
-) *controller {
+) Controller {
 	return &controller{
 		dbClient:   dbClient,
 		collection: collection,
