@@ -10,8 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var client *mongo.Client
-
 // Dbconnect -> connects mongo
 func Dbconnect() *mongo.Client {
 	url := middlewares.DotEnvVariable("MONGO_URL")

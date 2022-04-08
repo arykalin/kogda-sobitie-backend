@@ -8,7 +8,8 @@ type AuthenticateRequest struct {
 }
 
 type AuthenticateResponse struct {
-	Token string
+	Account Account
+	Token   string
 }
 
 type CreateEventRequest struct {

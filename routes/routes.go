@@ -17,7 +17,7 @@ import (
 // Routes -> define endpoints
 func Routes() *mux.Router {
 	router := mux.NewRouter()
-	//router.HandleFunc("/event", middlewares.IsAuthorized(controllers.CreateEventEndpoint)).Methods("POST")
+	router.HandleFunc("/event", middlewares.IsAuthorized(controllers.CreateEventEndpoint)).Methods("POST")
 	router.HandleFunc("/event", middlewares.IsAuthorized(event_controller.CreateEventEndpoint)).Methods("POST")
 	router.HandleFunc("/auth", event_controller.Auths).Methods("GET")
 	router.HandleFunc("/events", event_controller.GetEventsEndpoint).Methods("GET")

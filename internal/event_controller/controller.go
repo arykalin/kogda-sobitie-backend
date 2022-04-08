@@ -4,12 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-
 	"log"
-
 	"strings"
 
-	"github.com/arykalin/kogda-sobitie-backend/db"
 	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
 	"github.com/arykalin/kogda-sobitie-backend/internal/auth"
 	"github.com/arykalin/kogda-sobitie-backend/models"
@@ -18,12 +15,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 )
 
-var client = db.Dbconnect()
-
 type controller struct {
-	dbClient *mongo.Client
+	logger     *zap.SugaredLogger
+	dbClient   *mongo.Client
+	collection *mongo.Collection
 }
 
 func (c *controller) Authenticate(req models.AuthenticateRequest) (resp models.AuthenticateResponse, err error) {
@@ -51,41 +49,47 @@ func (c *controller) Authenticate(req models.AuthenticateRequest) (resp models.A
 		GivenName:     claims.FirstName,
 		FamilyName:    claims.LastName,
 	}
-	middlewares.UserInfoResponse(info, validToken, response)
-	return
+	resp.Account = info
+	resp.Token = validToken
+	return resp, nil
 }
 
-// CreateEventEndpoint -> create event
-func (c *controller) CreateEventEndpoint(req models.CreateEventRequest) (resp models.CreateEventResponse, err error) {
-	var event models.Event
-	err := json.NewDecoder(req.Body).Decode(&event)
-	if err != nil {
-		middlewares.ServerErrResponse(err.Error(), response)
-		return
+// CreateEvent -> create event
+func (c *controller) CreateEvent(req models.CreateEventRequest) (resp models.CreateEventResponse, err error) {
+	event := models.Event{
+		ID:          primitive.ObjectID{},
+		Date:        req.Date,
+		Title:       req.Title,
+		Duration:    req.Duration,
+		Link:        req.Link,
+		Org:         req.Org,
+		Target:      req.Target,
+		Where:       req.Where,
+		Description: req.Description,
+		Amount:      req.Amount,
+		Place:       req.Place,
 	}
+
 	if ok, errors := validators.ValidateInputs(event); !ok {
-		middlewares.ValidationResponse(errors, response)
-		return
+		return resp, fmt.Errorf("validation error: %s", errors)
 	}
-	collection := client.Database("golang").Collection("events")
-	result, err := collection.InsertOne(context.TODO(), event)
+
+	result, err := c.collection.InsertOne(context.TODO(), event)
 	if err != nil {
-		middlewares.ServerErrResponse(err.Error(), response)
-		return
+		return resp, fmt.Errorf("failed to insert event: %w", err)
 	}
 	res, _ := json.Marshal(result.InsertedID)
-	middlewares.SuccessResponse(`Inserted at `+strings.Replace(string(res), `"`, ``, 2), response)
+	c.logger.Debugf("Inserted event: %s", res)
+	return resp, nil
 }
 
-// GetEventsEndpoint -> get events
-func (c *controller) GetEventsEndpoint(req models.ListEventsRequest) (resp models.ListEventsResponse, err error) {
+// ListEvents -> get events
+func (c *controller) ListEvents(req models.ListEventsRequest) (resp models.ListEventsResponse, err error) {
 	var events []*models.Event
 
-	collection := client.Database("golang").Collection("events")
-	cursor, err := collection.Find(context.TODO(), bson.D{{}})
+	cursor, err := c.collection.Find(context.TODO(), bson.D{{}})
 	if err != nil {
-		middlewares.ServerErrResponse(err.Error(), response)
-		return
+		return resp, fmt.Errorf("failed to find events: %w", err)
 	}
 	for cursor.Next(context.TODO()) {
 		var event models.Event
@@ -97,25 +101,20 @@ func (c *controller) GetEventsEndpoint(req models.ListEventsRequest) (resp model
 		events = append(events, &event)
 	}
 	if err := cursor.Err(); err != nil {
-		middlewares.ServerErrResponse(err.Error(), response)
-		return
+		return resp, fmt.Errorf("failed to decode events: %w", err)
 	}
-	middlewares.SuccessArrRespond(events, response)
+	resp.Events = events
+	return
 }
 
-// GetEventEndpoint -> get event by id
-func (c *controller) GetEventEndpoint(req models.GetEventRequest) (resp models.GetEventResponse, err error) {
-	params := mux.Vars(req)
-	id, _ := primitive.ObjectIDFromHex(params["id"])
-	var event models.Event
-
-	collection := client.Database("golang").Collection("events")
-	err := collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&event)
+// GetEvent -> get event by id
+func (c *controller) GetEvent(req models.GetEventRequest) (resp models.GetEventResponse, err error) {
+	eventID, err := primitive.ObjectIDFromHex(req.EventId)
+	err = c.collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: eventID}}).Decode(&resp.Event)
 	if err != nil {
-		middlewares.ErrorResponse("Event does not exist", response)
-		return
+		return resp, fmt.Errorf("failed to find event: %w", err)
 	}
-	middlewares.SuccessRespond(event, response)
+	return resp, nil
 }
 
 // DeleteEventEndpoint -> delete event by id
@@ -187,6 +186,14 @@ func (c *controller) UpdateEventEndpoint(req models.UpdateEventRequest) (resp mo
 	return
 }
 
-func NewController(dbClient *mongo.Client) *controller {
-	return &controller{dbClient: dbClient}
+func NewController(
+	dbClient *mongo.Client,
+	collection *mongo.Collection,
+	logger *zap.SugaredLogger,
+) *controller {
+	return &controller{
+		dbClient:   dbClient,
+		collection: collection,
+		logger:     logger,
+	}
 }
