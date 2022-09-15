@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/arykalin/kogda-sobitie-backend/internal/db"
+	eventController "github.com/arykalin/kogda-sobitie-backend/internal/event_controller"
 	"github.com/arykalin/kogda-sobitie-backend/pkg/server"
 	"go.uber.org/zap"
 )
@@ -17,7 +19,11 @@ func main() {
 	}
 	logger := sLogger.Sugar()
 
-	s, err := server.NewService(logger)
+	dbClient := db.Dbconnect()
+	collection := dbClient.Database("golang").Collection("events")
+
+	cntrl := eventController.NewController(dbClient, collection, logger)
+	s, err := server.NewService(cntrl, logger)
 	if err != nil {
 		logger.Fatal("failed to create service", zap.Error(err))
 	}

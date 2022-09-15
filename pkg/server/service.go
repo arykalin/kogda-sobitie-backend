@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 
+	eventController "github.com/arykalin/kogda-sobitie-backend/internal/event_controller"
 	grpcHandler "github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/handlers"
 	grpcModels "github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/models"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -45,10 +46,10 @@ func (s *Service) Start() error {
 	return group.Wait()
 }
 
-func NewService(logger *zap.SugaredLogger) (*Service, error) {
+func NewService(cntrl eventController.Controller, logger *zap.SugaredLogger) (*Service, error) {
 	ctx := context.Background()
 	var grpcServer = grpc.NewServer()
-	grpcServer.RegisterService(&grpcModels.ApiService_ServiceDesc, grpcHandler.NewHandler())
+	grpcServer.RegisterService(&grpcModels.ApiService_ServiceDesc, grpcHandler.NewHandler(cntrl))
 
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
