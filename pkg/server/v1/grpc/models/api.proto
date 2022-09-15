@@ -53,7 +53,7 @@ message GetEventRequest {
 }
 
 message GetEventResponse {
-  Event eventId = 1;
+  Event event = 1;
 }
 
 message DeleteEventRequest {

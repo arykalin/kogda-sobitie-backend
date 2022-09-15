@@ -17,19 +17,26 @@ func (h handler) Authenticate(ctx context.Context, req *grpcModels.AuthenticateR
 	resp, err := h.eventController.Authenticate(ctx, h.adapt.authenticateRequest(req))
 	return h.adapt.authenticateResponse(resp), err
 }
-func (h handler) CreateEvent(context.Context, *grpcModels.CreateEventRequest) (*grpcModels.CreateEventResponse, error) {
+
+// TODO: implement methods from controller
+func (h handler) CreateEvent(ctx context.Context, req *grpcModels.CreateEventRequest) (*grpcModels.CreateEventResponse, error) {
+	resp, err := h.eventController.CreateEvent(ctx, h.adapt.createEventRequest(req))
+	if err != nil {
+		return nil, err
+	}
+	return h.adapt.createEventResponse(resp), nil
+}
+
+func (h handler) GetEvent(ctx context.Context, req *grpcModels.GetEventRequest) (*grpcModels.GetEventResponse, error) {
 	return nil, nil
 }
-func (h handler) GetEvent(context.Context, *grpcModels.GetEventRequest) (*grpcModels.GetEventResponse, error) {
+func (h handler) DeleteEvent(ctx context.Context, req *grpcModels.DeleteEventRequest) (*grpcModels.DeleteEventResponse, error) {
 	return nil, nil
 }
-func (h handler) DeleteEvent(context.Context, *grpcModels.DeleteEventRequest) (*grpcModels.DeleteEventResponse, error) {
+func (h handler) UpdateEvent(ctx context.Context, req *grpcModels.UpdateEventRequest) (*grpcModels.UpdateEventResponse, error) {
 	return nil, nil
 }
-func (h handler) UpdateEvent(context.Context, *grpcModels.UpdateEventRequest) (*grpcModels.UpdateEventResponse, error) {
-	return nil, nil
-}
-func (h handler) ListEvents(context.Context, *grpcModels.ListEventsRequest) (*grpcModels.ListEventsResponse, error) {
+func (h handler) ListEvents(ctx context.Context, req *grpcModels.ListEventsRequest) (*grpcModels.ListEventsResponse, error) {
 	return nil, nil
 }
 
