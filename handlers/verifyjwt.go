@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/arykalin/kogda-sobitie-backend/internal/auth"
+	auth "github.com/arykalin/kogda-sobitie-backend/internal/securer/authenticator"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 

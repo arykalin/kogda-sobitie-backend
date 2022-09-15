@@ -1,4 +1,4 @@
-package auth
+package authenticator
 
 var users = map[string]bool{
 	"catherine.kamkova@gmail.com": true,
