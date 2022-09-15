@@ -1,10 +1,10 @@
 package models
 
 type AuthenticateRequest struct {
-	Login       string
-	Password    string
-	GoogleToken string
-	TelegramID  string
+	Login       *string
+	Password    *string
+	GoogleToken *string
+	TelegramID  *string
 }
 
 type AuthenticateResponse struct {

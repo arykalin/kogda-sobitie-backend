@@ -15,6 +15,7 @@ type Event struct {
 	Description string             `json:"description,omitempty" bson:"description,omitempty"`
 	Amount      string             `json:"amount,omitempty" bson:"amount,omitempty"`
 	Place       string             `json:"place,omitempty" bson:"place,omitempty"`
+	Private     bool               `json:"private,omitempty" bson:"private,omitempty"`
 }
 
 type Account struct {

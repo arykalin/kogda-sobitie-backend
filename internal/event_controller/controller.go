@@ -7,7 +7,7 @@ import (
 	"log"
 
 	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
-	"github.com/arykalin/kogda-sobitie-backend/internal/auth"
+	auth "github.com/arykalin/kogda-sobitie-backend/internal/securer/authenticator"
 	"github.com/arykalin/kogda-sobitie-backend/models"
 	"github.com/arykalin/kogda-sobitie-backend/validators"
 	"go.mongodb.org/mongo-driver/bson"
@@ -26,30 +26,37 @@ func (c *controller) Authenticate(ctx context.Context, req models.AuthenticateRe
 	//TODO: generate token only for valid google users
 	//https://qvault.io/golang/how-to-implement-sign-in-with-google-in-golang/
 
-	claims, err := auth.ValidateGoogleJWT(req.GoogleToken)
-	if err != nil {
-		return
-	}
-	if !claims.EmailVerified {
-		return resp, fmt.Errorf("email is not verified")
-	}
+	switch {
+	case req.GoogleToken != nil:
+		claims, err := auth.ValidateGoogleJWT(*req.GoogleToken)
+		if err != nil {
+			return
+		}
+		if !claims.EmailVerified {
+			return resp, fmt.Errorf("email is not verified")
+		}
 
-	validToken, err := middlewares.GenerateJWT(claims.Email)
-	if err != nil {
-		return resp, fmt.Errorf("failed to generate token: %w", err)
-	}
+		validToken, err := middlewares.GenerateJWT(claims.Email)
+		if err != nil {
+			return resp, fmt.Errorf("failed to generate token: %w", err)
+		}
 
-	info := models.Account{
-		Email:         claims.Email,
-		EmailVerified: claims.EmailVerified,
-		Name:          fmt.Sprintf("%s %s", claims.FirstName, claims.LastName),
-		Picture:       "",
-		GivenName:     claims.FirstName,
-		FamilyName:    claims.LastName,
+		info := models.Account{
+			Email:         claims.Email,
+			EmailVerified: claims.EmailVerified,
+			Name:          fmt.Sprintf("%s %s", claims.FirstName, claims.LastName),
+			Picture:       "",
+			GivenName:     claims.FirstName,
+			FamilyName:    claims.LastName,
+		}
+		resp.Account = info
+		resp.Token = validToken
+		return resp, nil
+	case req.Login != nil && req.Password != nil:
+		panic("implement me")
+	default:
+		return resp, fmt.Errorf("no valid authenticate methods found")
 	}
-	resp.Account = info
-	resp.Token = validToken
-	return resp, nil
 }
 
 // CreateEvent -> create event
