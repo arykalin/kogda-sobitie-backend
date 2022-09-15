@@ -9,3 +9,7 @@ import (
 type Authenticator interface {
 	Authenticate(ctx context.Context, user, token string) (accountModel models.Account, err error)
 }
+
+func NewAuthenticator() Authenticator {
+	return nil
+}

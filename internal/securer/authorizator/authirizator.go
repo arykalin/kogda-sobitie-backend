@@ -9,3 +9,7 @@ import (
 type Authorizator interface {
 	Authorize(ctx context.Context, user models.Account, entity models.Entity, verb models.RoleVerb) error
 }
+
+func NewAuthorizator() Authorizator {
+	return nil
+}
