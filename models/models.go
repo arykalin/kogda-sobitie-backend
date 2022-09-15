@@ -27,3 +27,8 @@ type Account struct {
 	FamilyName    string             `json:"familyName" bson:"familyName"`
 	Role          string             `json:"role" bson:"role"`
 }
+
+type Entity string
+
+const AccountEntity = "ACCOUNT"
+const EventEntity = "EVENT"
