@@ -20,7 +20,7 @@ func main() {
 	logger := sLogger.Sugar()
 
 	dbClient := db.Dbconnect()
-	collection := dbClient.Database("golang").Collection("events")
+	collection := dbClient.Database("year-wheel").Collection("events")
 
 	cntrl := eventController.NewController(dbClient, collection, logger)
 	s, err := server.NewService(cntrl, logger)

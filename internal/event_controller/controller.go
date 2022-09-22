@@ -26,11 +26,12 @@ func (c *controller) Authenticate(ctx context.Context, req models.AuthenticateRe
 	//TODO: generate token only for valid google users
 	//https://qvault.io/golang/how-to-implement-sign-in-with-google-in-golang/
 
+	c.logger.Debugf("running authenticate")
 	switch {
 	case req.GoogleToken != nil:
 		claims, err := auth.ValidateGoogleJWT(*req.GoogleToken)
 		if err != nil {
-			return
+			return resp, err
 		}
 		if !claims.EmailVerified {
 			return resp, fmt.Errorf("email is not verified")

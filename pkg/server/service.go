@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"net/http"
 
@@ -23,12 +24,19 @@ type Service struct {
 	grpcServerEndpoint string
 	logger             *zap.SugaredLogger
 	httpServerEndpoint string
+	cfg                config
+}
+
+type config struct {
+	GrpcServerPort string
+	GrpcServerHost string
+	HttpServerPort string
 }
 
 func (s *Service) Start() error {
 	var group errgroup.Group
 
-	lis, err := net.Listen("tcp", ":8842")
+	lis, err := net.Listen("tcp", s.cfg.GrpcServerPort)
 	if err != nil {
 		return err
 	}
@@ -47,14 +55,20 @@ func (s *Service) Start() error {
 }
 
 func NewService(cntrl eventController.Controller, logger *zap.SugaredLogger) (*Service, error) {
+	// TODO: make config
+	var cfg config
+	cfg.GrpcServerPort = ":9090"
+	cfg.GrpcServerHost = "localhost"
+	cfg.HttpServerPort = ":8081"
+
 	ctx := context.Background()
 	var grpcServer = grpc.NewServer()
 	grpcServer.RegisterService(&grpcModels.ApiService_ServiceDesc, grpcHandler.NewHandler(cntrl))
 
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	grpcServerEndpoint := "localhost:9090"
-	httpServerEndpoint := ":8081"
+	grpcServerEndpoint := fmt.Sprintf("%s%s", cfg.GrpcServerHost, cfg.GrpcServerPort)
+	httpServerEndpoint := cfg.HttpServerPort
 
 	return &Service{
 		grpcServer:         grpcServer,
@@ -64,5 +78,6 @@ func NewService(cntrl eventController.Controller, logger *zap.SugaredLogger) (*S
 		grpcServerEndpoint: grpcServerEndpoint,
 		httpServerEndpoint: httpServerEndpoint,
 		logger:             logger,
+		cfg:                cfg,
 	}, nil
 }

@@ -9,8 +9,8 @@ type adapter struct{}
 
 func (a adapter) authenticateRequest(req *grpcModels.AuthenticateRequest) models.AuthenticateRequest {
 	return models.AuthenticateRequest{
-		Login:    req.Login,
-		Password: req.Password,
+		Login:    &req.Login,
+		Password: &req.Password,
 	}
 }
 

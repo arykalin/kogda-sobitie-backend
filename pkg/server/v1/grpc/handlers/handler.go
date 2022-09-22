@@ -18,7 +18,6 @@ func (h handler) Authenticate(ctx context.Context, req *grpcModels.AuthenticateR
 	return h.adapt.authenticateResponse(resp), err
 }
 
-// TODO: implement methods from controller
 func (h handler) CreateEvent(ctx context.Context, req *grpcModels.CreateEventRequest) (*grpcModels.CreateEventResponse, error) {
 	resp, err := h.eventController.CreateEvent(ctx, h.adapt.createEventRequest(req))
 	if err != nil {
