@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	url = "https://api.kogda-sobitie.ga:8443/event"
-	//url = "http://127.0.0.1:8080/event"
+	//url = "https://api.kogda-sobitie.ga:8443/event"
+	url = "http://127.0.0.1:8081/event"
 	//sheetID = "14wDIetN079MegHhM-Bja-AgY9QEvy1TLbLEpqJwDHDE" // Kamkova edited
 	sheetID = "14lqlXGtiT6vHi6O4X3iGDy9fATI3kghb8bS1_szNA_o" // original
 )
