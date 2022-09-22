@@ -15,3 +15,5 @@ grpc:
 		--swagger_out=allow_merge=true,merge_file_name=api:$(PROTO_PATH) \
 		--go_out=paths=source_relative:. --go-grpc_out=paths=source_relative:. $(PROTO_PATH)/*.proto
 
+startdb:
+	mongod --dbpath ./data/dev/mongo/
