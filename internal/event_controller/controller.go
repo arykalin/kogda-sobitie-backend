@@ -8,7 +8,7 @@ import (
 
 	models2 "github.com/arykalin/kogda-sobitie-backend/internal/models"
 	auth "github.com/arykalin/kogda-sobitie-backend/internal/securer/authenticator"
-	"github.com/arykalin/kogda-sobitie-backend/validators"
+	"github.com/arykalin/kogda-sobitie-backend/internal/validators"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
