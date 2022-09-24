@@ -1,15 +1,14 @@
-package middlewares
+package authenticator
 
 import (
 	"fmt"
 	"net/http"
 	"time"
 
-	auth "github.com/arykalin/kogda-sobitie-backend/internal/securer/authenticator"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-var mySigningKey = []byte(DotEnvVariable("JWT_SECRET"))
+var mySigningKey = []byte("JWT_SECRET_SECRET")
 
 // IsAuthorized -> verify jwt header
 func IsAuthorized(next http.Handler) http.HandlerFunc {
@@ -23,27 +22,27 @@ func IsAuthorized(next http.Handler) http.HandlerFunc {
 			})
 
 			if token == nil {
-				AuthorizationResponse("Invalid JWT token", w)
+				fmt.Println("Invalid JWT token")
 			}
 
 			if err != nil {
-				AuthorizationResponse("Invalid JWT token", w)
+				fmt.Println("Invalid JWT token")
 			}
 
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 				client, ok := claims["client"].(string)
 				if !ok {
-					AuthorizationResponse("Not Authorized: failed to get client from jwt claim", w)
+					fmt.Println("Not Authorized: failed to get client from jwt claim")
 				}
-				if !auth.UserIsValid(client) {
-					AuthorizationResponse(fmt.Sprintf("Not Authorized: user %s not found", client), w)
+				if !UserIsValid(client) {
+					fmt.Println(fmt.Sprintf("Not Authorized: user %s not found", client))
 				}
 				next.ServeHTTP(w, r)
 			} else {
-				AuthorizationResponse("Not Authorized", w)
+				fmt.Println("Not Authorized")
 			}
 		} else {
-			AuthorizationResponse("Not Authorized", w)
+			fmt.Println("Not Authorized")
 		}
 	}
 }

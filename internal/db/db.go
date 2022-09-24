@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
 	"github.com/fatih/color"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -12,7 +11,7 @@ import (
 
 // Dbconnect -> connects mongo
 func Dbconnect() *mongo.Client {
-	url := middlewares.DotEnvVariable("MONGO_URL")
+	url := ""
 	clientOptions := options.Client().ApplyURI(url)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {

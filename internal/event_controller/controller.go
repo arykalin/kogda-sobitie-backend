@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 
-	middlewares "github.com/arykalin/kogda-sobitie-backend/handlers"
 	auth "github.com/arykalin/kogda-sobitie-backend/internal/securer/authenticator"
 	"github.com/arykalin/kogda-sobitie-backend/models"
 	"github.com/arykalin/kogda-sobitie-backend/validators"
@@ -37,7 +36,7 @@ func (c *controller) Authenticate(ctx context.Context, req models.AuthenticateRe
 			return resp, fmt.Errorf("email is not verified")
 		}
 
-		validToken, err := middlewares.GenerateJWT(claims.Email)
+		validToken, err := auth.GenerateJWT(claims.Email)
 		if err != nil {
 			return resp, fmt.Errorf("failed to generate token: %w", err)
 		}
