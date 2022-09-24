@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	models2 "github.com/arykalin/kogda-sobitie-backend/internal/models"
 	"github.com/arykalin/kogda-sobitie-backend/internal/securer/authenticator"
 	"github.com/arykalin/kogda-sobitie-backend/internal/securer/authorizator"
-	"github.com/arykalin/kogda-sobitie-backend/models"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -18,10 +18,10 @@ type securer struct {
 }
 
 type Securer interface {
-	Secure(ctx context.Context, name models.Entity, create models.RoleVerb) error
+	Secure(ctx context.Context, name models2.Entity, create models2.RoleVerb) error
 }
 
-func (s *securer) Secure(ctx context.Context, entity models.Entity, verb models.RoleVerb) error {
+func (s *securer) Secure(ctx context.Context, entity models2.Entity, verb models2.RoleVerb) error {
 	user, token, err := s.getToken(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to get token from context: %w", err)
@@ -68,7 +68,7 @@ func (s *securer) getToken(ctx context.Context) (user, token string, err error) 
 	return user, token, nil
 }
 
-func (s *securer) accIsAdmin(ctx context.Context, acc models.Account) (bool, error) {
+func (s *securer) accIsAdmin(ctx context.Context, acc models2.Account) (bool, error) {
 	//TODO: check if acc have admin role @arykalin CL-259
 	return false, nil
 }

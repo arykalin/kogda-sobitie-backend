@@ -3,7 +3,7 @@ package authenticator
 import (
 	"context"
 
-	"github.com/arykalin/kogda-sobitie-backend/models"
+	"github.com/arykalin/kogda-sobitie-backend/internal/models"
 )
 
 type Authenticator interface {

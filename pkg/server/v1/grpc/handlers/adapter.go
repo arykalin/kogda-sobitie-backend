@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/arykalin/kogda-sobitie-backend/models"
+	"github.com/arykalin/kogda-sobitie-backend/internal/models"
 	grpcModels "github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/models"
 )
 

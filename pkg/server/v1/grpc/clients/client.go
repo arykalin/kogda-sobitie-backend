@@ -3,7 +3,7 @@ package clients
 import (
 	"fmt"
 
-	"github.com/arykalin/kogda-sobitie-backend/models"
+	models2 "github.com/arykalin/kogda-sobitie-backend/internal/models"
 	generatedClient "github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/clients/client"
 	"github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/clients/client/api_service"
 	clientModels "github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/clients/models"
@@ -11,24 +11,24 @@ import (
 )
 
 type Client interface {
-	Authenticate(request models.AuthenticateRequest) (models.AuthenticateResponse, error)
-	CreateEvent(request models.CreateEventRequest) (models.CreateEventResponse, error)
-	DeleteEvent(request models.DeleteEventRequest) (models.DeleteEventResponse, error)
-	GetEvent(request models.GetEventRequest) (models.GetEventResponse, error)
-	ListEvents(request models.ListEventsRequest) (models.ListEventsResponse, error)
-	UpdateEvent(request models.UpdateEventRequest) (models.UpdateEventResponse, error)
+	Authenticate(request models2.AuthenticateRequest) (models2.AuthenticateResponse, error)
+	CreateEvent(request models2.CreateEventRequest) (models2.CreateEventResponse, error)
+	DeleteEvent(request models2.DeleteEventRequest) (models2.DeleteEventResponse, error)
+	GetEvent(request models2.GetEventRequest) (models2.GetEventResponse, error)
+	ListEvents(request models2.ListEventsRequest) (models2.ListEventsResponse, error)
+	UpdateEvent(request models2.UpdateEventRequest) (models2.UpdateEventResponse, error)
 }
 
 type client struct {
 	grpcCli *generatedClient.YearWheel
 }
 
-func (c client) Authenticate(request models.AuthenticateRequest) (models.AuthenticateResponse, error) {
+func (c client) Authenticate(request models2.AuthenticateRequest) (models2.AuthenticateResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c client) CreateEvent(request models.CreateEventRequest) (models.CreateEventResponse, error) {
+func (c client) CreateEvent(request models2.CreateEventRequest) (models2.CreateEventResponse, error) {
 	resp, err := c.grpcCli.APIService.APIServiceCreateEvent(&api_service.APIServiceCreateEventParams{
 		Context:    nil,
 		HTTPClient: nil,
@@ -46,10 +46,10 @@ func (c client) CreateEvent(request models.CreateEventRequest) (models.CreateEve
 		},
 	})
 	if err != nil {
-		return models.CreateEventResponse{}, fmt.Errorf("failed to create event: %w", err)
+		return models2.CreateEventResponse{}, fmt.Errorf("failed to create event: %w", err)
 	}
-	return models.CreateEventResponse{
-		Event: models.Event{
+	return models2.CreateEventResponse{
+		Event: models2.Event{
 			ID:          primitive.ObjectID{},
 			Date:        resp.Payload.Event.Date,
 			Title:       resp.Payload.Event.Title,
@@ -66,26 +66,26 @@ func (c client) CreateEvent(request models.CreateEventRequest) (models.CreateEve
 	}, nil
 }
 
-func (c client) DeleteEvent(request models.DeleteEventRequest) (models.DeleteEventResponse, error) {
+func (c client) DeleteEvent(request models2.DeleteEventRequest) (models2.DeleteEventResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c client) GetEvent(request models.GetEventRequest) (models.GetEventResponse, error) {
+func (c client) GetEvent(request models2.GetEventRequest) (models2.GetEventResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c client) ListEvents(request models.ListEventsRequest) (models.ListEventsResponse, error) {
+func (c client) ListEvents(request models2.ListEventsRequest) (models2.ListEventsResponse, error) {
 	resp, err := c.grpcCli.APIService.APIServiceListEvents(&api_service.APIServiceListEventsParams{
 		Date: request.Date,
 	})
 	if err != nil {
-		return models.ListEventsResponse{}, fmt.Errorf("failed to list events: %w", err)
+		return models2.ListEventsResponse{}, fmt.Errorf("failed to list events: %w", err)
 	}
-	var list []models.Event
+	var list []models2.Event
 	for _, event := range resp.Payload.Events {
-		list = append(list, models.Event{
+		list = append(list, models2.Event{
 			Date:        event.Date,
 			Title:       event.Title,
 			Duration:    event.Duration,
@@ -99,12 +99,12 @@ func (c client) ListEvents(request models.ListEventsRequest) (models.ListEventsR
 			Private:     false,
 		})
 	}
-	return models.ListEventsResponse{
+	return models2.ListEventsResponse{
 		Events: list,
 	}, nil
 }
 
-func (c client) UpdateEvent(request models.UpdateEventRequest) (models.UpdateEventResponse, error) {
+func (c client) UpdateEvent(request models2.UpdateEventRequest) (models2.UpdateEventResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
