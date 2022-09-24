@@ -64,7 +64,7 @@ type UpdateEventResponse struct {
 }
 
 type ListEventsRequest struct {
-	Date string
+	Date *string
 }
 
 type ListEventsResponse struct {

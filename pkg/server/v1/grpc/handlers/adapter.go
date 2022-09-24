@@ -55,7 +55,7 @@ func (a adapter) createEventResponse(res models.CreateEventResponse) *grpcModels
 //list
 func (a adapter) listEventRequest(req *grpcModels.ListEventsRequest) models.ListEventsRequest {
 	return models.ListEventsRequest{
-		Date: req.Date,
+		Date: &req.Date,
 	}
 }
 
