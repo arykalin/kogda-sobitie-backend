@@ -9,6 +9,10 @@ import (
 
 var validate *validator.Validate
 
+type Int interface {
+	ValidateInputs(dataSet interface{}) (bool, map[string][]string)
+}
+
 // ValidateInputs -> sanitize user inputs
 func ValidateInputs(dataSet interface{}) (bool, map[string][]string) {
 	validate = validator.New()

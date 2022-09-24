@@ -15,7 +15,7 @@ services:
     ports:
       - '80:80'
     volumes:
-      - ./nginx/dev.conf.d:/etc/nginx/conf.d
+      - ./scripts/nginx/dev.conf.d:/etc/nginx/conf.d
     depends_on:
       - 'api'
   mongo:
