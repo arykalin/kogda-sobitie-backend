@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/arykalin/kogda-sobitie-backend/internal/models"
+	"github.com/arykalin/kogda-sobitie-backend/internal/event_controller/models"
 	"go.uber.org/zap"
 	"gopkg.in/Iwark/spreadsheet.v2"
 )

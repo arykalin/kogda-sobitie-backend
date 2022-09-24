@@ -3,7 +3,7 @@ package eventController
 import (
 	"context"
 
-	"github.com/arykalin/kogda-sobitie-backend/internal/models"
+	"github.com/arykalin/kogda-sobitie-backend/internal/event_controller/models"
 )
 
 type Controller interface {

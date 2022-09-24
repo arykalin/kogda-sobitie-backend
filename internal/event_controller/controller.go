@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 
-	models2 "github.com/arykalin/kogda-sobitie-backend/internal/models"
+	"github.com/arykalin/kogda-sobitie-backend/internal/event_controller/models"
+	"github.com/arykalin/kogda-sobitie-backend/internal/event_controller/validators"
 	auth "github.com/arykalin/kogda-sobitie-backend/internal/securer/authenticator"
-	"github.com/arykalin/kogda-sobitie-backend/internal/validators"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -21,7 +21,7 @@ type controller struct {
 	collection *mongo.Collection
 }
 
-func (c *controller) Authenticate(ctx context.Context, req models2.AuthenticateRequest) (resp models2.AuthenticateResponse, err error) {
+func (c *controller) Authenticate(ctx context.Context, req models.AuthenticateRequest) (resp models.AuthenticateResponse, err error) {
 	//TODO: generate token only for valid google users
 	//https://qvault.io/golang/how-to-implement-sign-in-with-google-in-golang/
 
@@ -41,7 +41,7 @@ func (c *controller) Authenticate(ctx context.Context, req models2.AuthenticateR
 			return resp, fmt.Errorf("failed to generate token: %w", err)
 		}
 
-		info := models2.Account{
+		info := models.Account{
 			Email:         claims.Email,
 			EmailVerified: claims.EmailVerified,
 			Name:          fmt.Sprintf("%s %s", claims.FirstName, claims.LastName),
@@ -60,8 +60,8 @@ func (c *controller) Authenticate(ctx context.Context, req models2.AuthenticateR
 }
 
 // CreateEvent -> create event
-func (c *controller) CreateEvent(ctx context.Context, req models2.CreateEventRequest) (resp models2.CreateEventResponse, err error) {
-	event := models2.Event{
+func (c *controller) CreateEvent(ctx context.Context, req models.CreateEventRequest) (resp models.CreateEventResponse, err error) {
+	event := models.Event{
 		ID:          primitive.ObjectID{},
 		Date:        req.Date,
 		Title:       req.Title,
@@ -89,15 +89,15 @@ func (c *controller) CreateEvent(ctx context.Context, req models2.CreateEventReq
 }
 
 // ListEvents -> get events
-func (c *controller) ListEvents(ctx context.Context, req models2.ListEventsRequest) (resp models2.ListEventsResponse, err error) {
-	var events []models2.Event
+func (c *controller) ListEvents(ctx context.Context, req models.ListEventsRequest) (resp models.ListEventsResponse, err error) {
+	var events []models.Event
 
 	cursor, err := c.collection.Find(context.TODO(), bson.D{{}})
 	if err != nil {
 		return resp, fmt.Errorf("failed to find events: %w", err)
 	}
 	for cursor.Next(context.TODO()) {
-		var event models2.Event
+		var event models.Event
 		err := cursor.Decode(&event)
 		if err != nil {
 			log.Fatal(err)
@@ -113,7 +113,7 @@ func (c *controller) ListEvents(ctx context.Context, req models2.ListEventsReque
 }
 
 // GetEvent -> get event by id
-func (c *controller) GetEvent(ctx context.Context, req models2.GetEventRequest) (resp models2.GetEventResponse, err error) {
+func (c *controller) GetEvent(ctx context.Context, req models.GetEventRequest) (resp models.GetEventResponse, err error) {
 	eventID, err := primitive.ObjectIDFromHex(req.EventId)
 	err = c.collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: eventID}}).Decode(&resp.Event)
 	if err != nil {
@@ -123,7 +123,7 @@ func (c *controller) GetEvent(ctx context.Context, req models2.GetEventRequest) 
 }
 
 // DeleteEvent -> delete event by id
-func (c *controller) DeleteEvent(ctx context.Context, req models2.DeleteEventRequest) (resp models2.DeleteEventResponse, err error) {
+func (c *controller) DeleteEvent(ctx context.Context, req models.DeleteEventRequest) (resp models.DeleteEventResponse, err error) {
 	id, _ := primitive.ObjectIDFromHex(req.EventId)
 	err = c.collection.FindOne(context.TODO(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&resp.Event)
 	if err != nil {
@@ -137,10 +137,10 @@ func (c *controller) DeleteEvent(ctx context.Context, req models2.DeleteEventReq
 }
 
 // UpdateEvent -> update event by id
-func (c *controller) UpdateEvent(ctx context.Context, req models2.UpdateEventRequest) (resp models2.UpdateEventResponse, err error) {
+func (c *controller) UpdateEvent(ctx context.Context, req models.UpdateEventRequest) (resp models.UpdateEventResponse, err error) {
 	id, _ := primitive.ObjectIDFromHex(req.EventId)
 	var (
-		event = models2.Event{
+		event = models.Event{
 			ID:          id,
 			Date:        req.Date,
 			Title:       req.Title,
@@ -153,7 +153,7 @@ func (c *controller) UpdateEvent(ctx context.Context, req models2.UpdateEventReq
 			Amount:      req.Amount,
 			Place:       req.Place,
 		}
-		oldEvent models2.Event
+		oldEvent models.Event
 	)
 
 	if ok, errors := validators.ValidateInputs(event); !ok {

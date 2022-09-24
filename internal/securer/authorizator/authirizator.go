@@ -3,11 +3,11 @@ package authorizator
 import (
 	"context"
 
-	models2 "github.com/arykalin/kogda-sobitie-backend/internal/models"
+	"github.com/arykalin/kogda-sobitie-backend/internal/event_controller/models"
 )
 
 type Authorizator interface {
-	Authorize(ctx context.Context, user models2.Account, entity models2.Entity, verb models2.RoleVerb) error
+	Authorize(ctx context.Context, user models.Account, entity models.Entity, verb models.RoleVerb) error
 }
 
 func NewAuthorizator() Authorizator {
