@@ -6,6 +6,8 @@ import (
 	"github.com/arykalin/kogda-sobitie-backend/models"
 	generatedClient "github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/clients/client"
 	"github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/clients/client/api_service"
+	clientModels "github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/clients/models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Client interface {
@@ -30,13 +32,36 @@ func (c client) CreateEvent(request models.CreateEventRequest) (models.CreateEve
 	resp, err := c.grpcCli.APIService.APIServiceCreateEvent(&api_service.APIServiceCreateEventParams{
 		Context:    nil,
 		HTTPClient: nil,
+		Body: &clientModels.GrpcCreateEventRequest{
+			Amount:      request.Amount,
+			Date:        request.Date,
+			Description: request.Description,
+			Duration:    request.Duration,
+			Link:        request.Link,
+			Org:         request.Org,
+			Place:       request.Place,
+			Target:      request.Target,
+			Title:       request.Title,
+			Where:       request.Where,
+		},
 	})
 	if err != nil {
 		return models.CreateEventResponse{}, fmt.Errorf("failed to create event: %w", err)
 	}
 	return models.CreateEventResponse{
 		Event: models.Event{
-			Title: resp.Payload.Event.Title,
+			ID:          primitive.ObjectID{},
+			Date:        resp.Payload.Event.Date,
+			Title:       resp.Payload.Event.Title,
+			Duration:    resp.Payload.Event.Duration,
+			Link:        resp.Payload.Event.Link,
+			Org:         resp.Payload.Event.Org,
+			Target:      resp.Payload.Event.Title,
+			Where:       resp.Payload.Event.Where,
+			Description: resp.Payload.Event.Description,
+			Amount:      resp.Payload.Event.Amount,
+			Place:       resp.Payload.Event.Place,
+			Private:     false,
 		},
 	}, nil
 }
