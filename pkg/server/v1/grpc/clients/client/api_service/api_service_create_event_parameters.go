@@ -14,12 +14,14 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/clients/models"
 )
 
 // NewAPIServiceCreateEventParams creates a new APIServiceCreateEventParams object
 // with the default values initialized.
 func NewAPIServiceCreateEventParams() *APIServiceCreateEventParams {
-
+	var ()
 	return &APIServiceCreateEventParams{
 
 		timeout: cr.DefaultTimeout,
@@ -29,7 +31,7 @@ func NewAPIServiceCreateEventParams() *APIServiceCreateEventParams {
 // NewAPIServiceCreateEventParamsWithTimeout creates a new APIServiceCreateEventParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewAPIServiceCreateEventParamsWithTimeout(timeout time.Duration) *APIServiceCreateEventParams {
-
+	var ()
 	return &APIServiceCreateEventParams{
 
 		timeout: timeout,
@@ -39,7 +41,7 @@ func NewAPIServiceCreateEventParamsWithTimeout(timeout time.Duration) *APIServic
 // NewAPIServiceCreateEventParamsWithContext creates a new APIServiceCreateEventParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewAPIServiceCreateEventParamsWithContext(ctx context.Context) *APIServiceCreateEventParams {
-
+	var ()
 	return &APIServiceCreateEventParams{
 
 		Context: ctx,
@@ -49,7 +51,7 @@ func NewAPIServiceCreateEventParamsWithContext(ctx context.Context) *APIServiceC
 // NewAPIServiceCreateEventParamsWithHTTPClient creates a new APIServiceCreateEventParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewAPIServiceCreateEventParamsWithHTTPClient(client *http.Client) *APIServiceCreateEventParams {
-
+	var ()
 	return &APIServiceCreateEventParams{
 		HTTPClient: client,
 	}
@@ -59,6 +61,10 @@ func NewAPIServiceCreateEventParamsWithHTTPClient(client *http.Client) *APIServi
 for the Api service create event operation typically these are written to a http.Request
 */
 type APIServiceCreateEventParams struct {
+
+	/*Body*/
+	Body *models.GrpcCreateEventRequest
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -97,6 +103,17 @@ func (o *APIServiceCreateEventParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBody adds the body to the Api service create event params
+func (o *APIServiceCreateEventParams) WithBody(body *models.GrpcCreateEventRequest) *APIServiceCreateEventParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the Api service create event params
+func (o *APIServiceCreateEventParams) SetBody(body *models.GrpcCreateEventRequest) {
+	o.Body = body
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *APIServiceCreateEventParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -104,6 +121,12 @@ func (o *APIServiceCreateEventParams) WriteToRequest(r runtime.ClientRequest, re
 		return err
 	}
 	var res []error
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

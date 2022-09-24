@@ -28,6 +28,16 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/grpcAuthenticateRequest"
+            }
+          }
+        ],
         "tags": [
           "ApiService"
         ]
@@ -50,6 +60,16 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/grpcCreateEventRequest"
+            }
+          }
+        ],
         "tags": [
           "ApiService"
         ]
@@ -173,10 +193,59 @@
     }
   },
   "definitions": {
+    "grpcAuthenticateRequest": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "id_token": {
+          "type": "string"
+        }
+      }
+    },
     "grpcAuthenticateResponse": {
       "type": "object",
       "properties": {
         "token": {
+          "type": "string"
+        }
+      }
+    },
+    "grpcCreateEventRequest": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        },
+        "org": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "where": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "place": {
           "type": "string"
         }
       }

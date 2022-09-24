@@ -94,11 +94,13 @@ service ApiService {
   rpc Authenticate (AuthenticateRequest) returns (AuthenticateResponse) {
     option (google.api.http) = {
       post: "/authenticate"
+      body: "*"
     };
   }
   rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse) {
     option (google.api.http) = {
       post: "/event"
+      body: "*"
     };
   }
   rpc GetEvent (GetEventRequest) returns (GetEventResponse) {

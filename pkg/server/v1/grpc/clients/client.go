@@ -27,8 +27,18 @@ func (c client) Authenticate(request models.AuthenticateRequest) (models.Authent
 }
 
 func (c client) CreateEvent(request models.CreateEventRequest) (models.CreateEventResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	resp, err := c.grpcCli.APIService.APIServiceCreateEvent(&api_service.APIServiceCreateEventParams{
+		Context:    nil,
+		HTTPClient: nil,
+	})
+	if err != nil {
+		return models.CreateEventResponse{}, fmt.Errorf("failed to create event: %w", err)
+	}
+	return models.CreateEventResponse{
+		Event: models.Event{
+			Title: resp.Payload.Event.Title,
+		},
+	}, nil
 }
 
 func (c client) DeleteEvent(request models.DeleteEventRequest) (models.DeleteEventResponse, error) {

@@ -14,12 +14,14 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/arykalin/kogda-sobitie-backend/pkg/server/v1/grpc/clients/models"
 )
 
 // NewAPIServiceAuthenticateParams creates a new APIServiceAuthenticateParams object
 // with the default values initialized.
 func NewAPIServiceAuthenticateParams() *APIServiceAuthenticateParams {
-
+	var ()
 	return &APIServiceAuthenticateParams{
 
 		timeout: cr.DefaultTimeout,
@@ -29,7 +31,7 @@ func NewAPIServiceAuthenticateParams() *APIServiceAuthenticateParams {
 // NewAPIServiceAuthenticateParamsWithTimeout creates a new APIServiceAuthenticateParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewAPIServiceAuthenticateParamsWithTimeout(timeout time.Duration) *APIServiceAuthenticateParams {
-
+	var ()
 	return &APIServiceAuthenticateParams{
 
 		timeout: timeout,
@@ -39,7 +41,7 @@ func NewAPIServiceAuthenticateParamsWithTimeout(timeout time.Duration) *APIServi
 // NewAPIServiceAuthenticateParamsWithContext creates a new APIServiceAuthenticateParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewAPIServiceAuthenticateParamsWithContext(ctx context.Context) *APIServiceAuthenticateParams {
-
+	var ()
 	return &APIServiceAuthenticateParams{
 
 		Context: ctx,
@@ -49,7 +51,7 @@ func NewAPIServiceAuthenticateParamsWithContext(ctx context.Context) *APIService
 // NewAPIServiceAuthenticateParamsWithHTTPClient creates a new APIServiceAuthenticateParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewAPIServiceAuthenticateParamsWithHTTPClient(client *http.Client) *APIServiceAuthenticateParams {
-
+	var ()
 	return &APIServiceAuthenticateParams{
 		HTTPClient: client,
 	}
@@ -59,6 +61,10 @@ func NewAPIServiceAuthenticateParamsWithHTTPClient(client *http.Client) *APIServ
 for the Api service authenticate operation typically these are written to a http.Request
 */
 type APIServiceAuthenticateParams struct {
+
+	/*Body*/
+	Body *models.GrpcAuthenticateRequest
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -97,6 +103,17 @@ func (o *APIServiceAuthenticateParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBody adds the body to the Api service authenticate params
+func (o *APIServiceAuthenticateParams) WithBody(body *models.GrpcAuthenticateRequest) *APIServiceAuthenticateParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the Api service authenticate params
+func (o *APIServiceAuthenticateParams) SetBody(body *models.GrpcAuthenticateRequest) {
+	o.Body = body
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *APIServiceAuthenticateParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -104,6 +121,12 @@ func (o *APIServiceAuthenticateParams) WriteToRequest(r runtime.ClientRequest, r
 		return err
 	}
 	var res []error
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
