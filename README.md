@@ -7,3 +7,8 @@ Dev run:
 git clone https://github.com/arykalin/kogda-sobitie-backend.git
 docker-compose up -d
 ```
+
+To see logs run:
+```shell
+docker-compose logs -f
+```
